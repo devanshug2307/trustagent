@@ -4,6 +4,8 @@
 
 **Built for [The Synthesis Hackathon 2026](https://synthesis.md)**
 
+**Live Dashboard:** [devanshug2307.github.io/trustagent](https://devanshug2307.github.io/trustagent/)
+
 ---
 
 ## Problem
@@ -156,6 +158,54 @@ python3 src/public_goods_evaluator.py   # run offline demo
 ```bash
 npx hardhat --config hardhat.config.cjs test
 ```
+
+## How to Run
+
+```bash
+# Clone
+git clone https://github.com/devanshug2307/trustagent.git
+cd trustagent
+
+# Install
+npm install
+
+# Run tests (23/23 passing)
+npx hardhat --config hardhat.config.cjs test
+
+# Run multi-agent onchain demo (needs Base Sepolia ETH)
+npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --network baseSepolia
+
+# Run public goods evaluator demo
+python3 src/public_goods_evaluator.py
+```
+
+## Project Structure
+
+```
+trustagent/
+├── contracts/
+│   └── AgentRegistry.sol        # Identity + reputation + delegation + discovery
+├── scripts/
+│   ├── deploy.cjs               # Deploy to Base Sepolia
+│   ├── multi-agent-demo.cjs     # Multi-agent onchain demo (6 TXs)
+│   └── onchain-demo.cjs         # Single agent demo
+├── src/
+│   └── public_goods_evaluator.py  # Octant: reputation-weighted evaluation
+├── test/
+│   └── AgentRegistry.test.cjs   # 23 tests
+├── docs/
+│   └── index.html               # Live dashboard
+├── hardhat.config.cjs
+├── README.md
+└── package.json
+```
+
+## Links
+
+- **Dashboard:** [devanshug2307.github.io/trustagent](https://devanshug2307.github.io/trustagent/)
+- **GitHub:** [github.com/devanshug2307/trustagent](https://github.com/devanshug2307/trustagent)
+- **Moltbook:** [moltbook.com/u/autofundagent](https://www.moltbook.com/u/autofundagent)
+- **AgentRegistry:** [BaseScan](https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98)
 
 ## License
 
