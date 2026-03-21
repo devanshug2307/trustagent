@@ -123,12 +123,122 @@ npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --netwo
 python3 src/public_goods_evaluator.py   # run offline demo
 ```
 
+## Delegation as Escrow: Trust Primitives for Agent Coordination (Arkhai Track)
+
+TrustAgent's delegation protocol already implements scoped, time-limited, revocable permissions between agents. This same mechanism naturally extends to **escrow-like trust primitives** for autonomous agent commerce:
+
+### Lock-Perform-Release Pattern
+
+```
+┌─────────────┐         ┌─────────────┐
+│  Agent A     │         │  Agent B     │
+│  (Requester) │         │  (Provider)  │
+└──────┬───────┘         └──────┬───────┘
+       │                        │
+       │  1. LOCK: delegate()   │
+       │  ─────────────────────>│   Agent A grants scoped permissions
+       │  permissions=[EXECUTE] │   (time-limited, revocable)
+       │  expiry=1h             │
+       │                        │
+       │  2. PERFORM: agent B   │
+       │     executes task      │   Agent B operates within scoped
+       │  <─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │   permissions (on-chain audit trail)
+       │                        │
+       │  3a. RELEASE: attest() │
+       │  ─────────────────────>│   Success → attestCompletion(score>=5)
+       │  score=9, "Excellent"  │   Reputation increases, delegation expires
+       │                        │
+       │  3b. REVOKE (on fail): │
+       │  revokeDelegation()    │   Failure → revoke + attestCompletion(score<5)
+       │  ─────────────────────>│   Reputation decreases, permissions removed
+       │                        │
+```
+
+**How it maps to escrow:**
+
+| Escrow Concept | TrustAgent Implementation | Contract Function |
+|---|---|---|
+| **Lock funds/permissions** | `delegate(toAgentId, permissions, expiry)` | Creates time-bound scoped access |
+| **Agent performs work** | Agent operates within delegated scope | Permissions checked via `isDelegationActive()` |
+| **Release on success** | `attestCompletion(agentId, taskId, score>=5)` | Increases reputation, records receipt |
+| **Revoke on failure** | `revokeDelegation(id)` + `attestCompletion(score<5)` | Kills permissions, decreases reputation |
+| **Auto-expire (timeout)** | Built-in: `expiry` parameter on every delegation | `isDelegationActive()` returns false after expiry |
+| **Audit trail** | Every action emits events + stores on-chain | `DelegationCreated`, `AttestationCreated`, `ReputationUpdated` |
+
+This means TrustAgent can serve as the **trust layer for any agent-to-agent transaction** — the delegation protocol is already an escrow primitive, just framed as permission management rather than fund custody.
+
+## ERC-8004 Alignment: The Three Pillars
+
+TrustAgent implements all three pillars defined by the ERC-8004 standard for autonomous agent identity:
+
+### Pillar 1: Identity (Registration)
+
+Every agent gets a verifiable on-chain identity through `registerAgent()`:
+
+| ERC-8004 Requirement | TrustAgent Implementation |
+|---|---|
+| Unique identifier | `agentId` (auto-incrementing, starts at 1) |
+| Wallet binding | `wallet` field tied to `msg.sender` |
+| Human-readable name | `ensName` field (e.g., `analyst.trustagent.eth`) |
+| Capability declaration | `capabilities[]` array indexed for discovery |
+| Registration timestamp | `registeredAt` (block.timestamp) |
+| Sybil resistance | One registration per wallet (`require(!agents[walletToAgentId[msg.sender]].active)`) |
+
+**On-chain proof:** See [registration TXs](#onchain-proof) on Base Sepolia.
+
+### Pillar 2: Reputation (Attestation-Based Scoring)
+
+Agents build verifiable reputation through peer attestations via `attestCompletion()`:
+
+| ERC-8004 Requirement | TrustAgent Implementation |
+|---|---|
+| Reputation score | `reputationScore` (0-10000 basis points) |
+| Peer attestations | `attestCompletion(toAgentId, taskId, score, comment)` |
+| Success tracking | `tasksCompleted` counter (score >= 5) |
+| Failure tracking | `tasksFailed` counter (score < 5) |
+| Anti-gaming | Self-attestation blocked (`require(fromAgentId != toAgentId)`) |
+| Score calculation | `(tasksCompleted * 10000) / (tasksCompleted + tasksFailed)` |
+| Public queryability | `getReputation(agentId)` returns all metrics |
+
+**On-chain proof:** Attestation TX [`0x434a0aca...`](https://sepolia.basescan.org/tx/0x434a0aca75d08c4ecfee99959f886405d8c0ca870cc3da127411eda329503b55) — AuditorAgent attests ResearchAgent's task completion with score 9/10.
+
+### Pillar 3: Receipts (On-chain TX Hashes for Every Interaction)
+
+Every agent interaction produces a verifiable on-chain receipt via emitted events:
+
+| Interaction | Event Emitted | Receipt Data |
+|---|---|---|
+| Agent registration | `AgentRegistered(agentId, wallet, name)` | Identity creation proof |
+| Task attestation | `AttestationCreated(attestationId, from, to, score)` | Work completion proof |
+| Delegation grant | `DelegationCreated(delegationId, from, to, expiry)` | Permission grant proof |
+| Delegation revoke | `DelegationRevoked(delegationId)` | Permission revocation proof |
+| Reputation change | `ReputationUpdated(agentId, newScore)` | Score change proof |
+
+All receipts are permanently stored on Base Sepolia and queryable via any block explorer or RPC endpoint. The full interaction history for any agent can be reconstructed from event logs alone — no off-chain database required.
+
+**Complete TX receipt chain:** See [Onchain Proof](#onchain-proof) table — 6 transactions covering the full agent lifecycle from registration through delegation, attestation, and reputation update.
+
+## Olas Integration (Build + Monetize Tracks)
+
+`src/olas_integration.py` demonstrates how TrustAgent agents operate as Pearl-compatible autonomous services in the Olas ecosystem:
+
+- **Agent Registration** — Maps TrustAgent identity to Olas `ServiceComponent` schema
+- **Service Offerings** — Priced capability listings compatible with Olas Mech marketplace
+- **Request Handling** — Standard request/response lifecycle with fee validation and SLA tracking
+- **Revenue Tracking** — Per-agent monetization metrics for the Olas Monetize track
+
+```bash
+python3 src/olas_integration.py   # run Olas integration demo
+```
+
 ## Integrations
 
-- **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia
+- **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia (all three pillars: Identity, Reputation, Receipts)
+- **Olas/Pearl Compatible**: Agent registration, service offerings, and request handling matching Olas service component schema
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
 - **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
-- **Octant Public Goods**: Reputation-weighted project evaluation across mechanism design, data analysis, and data collection
+- **Octant Public Goods**: Reputation-weighted project evaluation with multi-source data collection (GitHub + on-chain evidence)
+- **Arkhai Escrow**: Delegation protocol extends to lock-perform-release trust primitives for agent commerce
 
 ## Built By
 
@@ -190,7 +300,8 @@ trustagent/
 │   ├── multi-agent-demo.cjs     # Multi-agent onchain demo (6 TXs)
 │   └── onchain-demo.cjs         # Single agent demo
 ├── src/
-│   └── public_goods_evaluator.py  # Octant: reputation-weighted evaluation
+│   ├── public_goods_evaluator.py  # Octant: reputation-weighted evaluation + data collection
+│   └── olas_integration.py        # Olas: Pearl-compatible agent services + monetization
 ├── test/
 │   └── AgentRegistry.test.cjs   # 23 tests
 ├── docs/

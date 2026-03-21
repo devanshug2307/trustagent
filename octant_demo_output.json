@@ -1,0 +1,67 @@
+{
+  "project_name": "TrustAgent",
+  "evaluation_timestamp": "2026-03-22T00:00:00Z",
+  "evaluator_registry": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+  "data_sources": {
+    "github": {
+      "repo": "devanshug2307/trustagent",
+      "metrics": {
+        "total_commits": 47,
+        "unique_contributors": 2,
+        "open_issues": 0,
+        "closed_issues": 3,
+        "stars": 1,
+        "forks": 0,
+        "last_commit_date": "2026-03-22",
+        "license": "MIT",
+        "readme_exists": true,
+        "ci_configured": true
+      },
+      "collection_method": "GitHub REST API v3 (/repos, /contributors, /commits)",
+      "collection_status": "sample_data"
+    },
+    "onchain": {
+      "network": "Base Sepolia (chainId 84532)",
+      "contracts": [
+        {
+          "address": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+          "deployed": true,
+          "transaction_count": 6,
+          "unique_callers": 3,
+          "deployment_tx": "0x...(see BaseScan)",
+          "verified_source": true
+        }
+      ],
+      "aggregate": {
+        "total_transactions": 6,
+        "unique_wallets": 3,
+        "total_value_locked_eth": 0.0,
+        "first_activity": "2026-03-21",
+        "last_activity": "2026-03-22"
+      },
+      "collection_method": "eth_getTransactionCount + Basescan API",
+      "collection_status": "sample_data"
+    }
+  },
+  "scoring_input": {
+    "legitimacy_signals": [
+      "verified_source_code",
+      "license_present",
+      "contributor_count > 1",
+      "readme_exists"
+    ],
+    "impact_signals": [
+      "transaction_count",
+      "unique_wallets",
+      "github_stars",
+      "issues_closed_ratio"
+    ],
+    "sustainability_signals": [
+      "commit_frequency",
+      "contributor_growth",
+      "ci_configured",
+      "last_commit_recency"
+    ]
+  },
+  "schema_version": "1.0.0"
+}
