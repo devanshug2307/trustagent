@@ -86,10 +86,9 @@ function delegate(uint256 toAgentId, bytes32[] permissions, uint256 expiry)
 
 ## Integrations
 
-- **ERC-8004**: Agent identity standard on Base
-- **ENS**: Human-readable agent names
-- **ERC-8183**: Agent interaction standard (Virtuals)
-- **Protocol Labs**: Trust layer with onchain receipts
+- **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia
+- **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
+- **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
 
 ## Built By
 
