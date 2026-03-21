@@ -84,11 +84,49 @@ function discoverAgents(string capability, uint256 minReputation) → Agent[]
 function delegate(uint256 toAgentId, bytes32[] permissions, uint256 expiry)
 ```
 
+## Multi-Agent Onchain Demo
+
+The `scripts/multi-agent-demo.cjs` script demonstrates the full multi-agent lifecycle on Base Sepolia:
+
+1. **Fund two fresh wallets** from the deployer
+2. **Register ResearchAgent** (capabilities: research, data-analysis, public-goods-eval)
+3. **Register AuditorAgent** (capabilities: audit, verification, public-goods-eval)
+4. **Create delegation** from ResearchAgent to AuditorAgent (VERIFY_DATA, AUDIT_REPORT permissions, 24h expiry)
+5. **Attestation** — AuditorAgent attests ResearchAgent's task completion (score 9/10)
+6. **Query state** — reputation updated to 10000/10000, capability discovery finds 2 public-goods-eval agents
+
+Run it:
+```bash
+npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --network baseSepolia
+```
+
+## Public Goods Evaluator (Octant Tracks)
+
+`src/public_goods_evaluator.py` implements reputation-weighted public goods project evaluation, targeting all three Octant tracks:
+
+| Octant Track | Dimension | Weight | What it measures |
+|---|---|---|---|
+| Mechanism Design | Legitimacy | 30% | Team verification, track record, transparency |
+| Data Analysis | Impact | 40% | Measurable outcomes, user reach, ecosystem value |
+| Data Collection | Sustainability | 30% | Revenue model, community, long-term viability |
+
+**How it works:**
+- Evaluators are TrustAgent-registered agents with on-chain reputation scores
+- Each evaluator scores projects on legitimacy, impact, and sustainability (1-10)
+- Scores are weighted by evaluator credibility (derived from on-chain reputation, task history, and attestation count)
+- Higher-reputation evaluators have more influence on the final ranking
+- Budget is allocated proportionally to composite scores, capped at each project's requested amount
+
+```bash
+python3 src/public_goods_evaluator.py   # run offline demo
+```
+
 ## Integrations
 
 - **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
 - **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
+- **Octant Public Goods**: Reputation-weighted project evaluation across mechanism design, data analysis, and data collection
 
 ## Built By
 
@@ -107,6 +145,10 @@ function delegate(uint256 toAgentId, bytes32[] permissions, uint256 expiry)
 |--------|---------|
 | Deploy AgentRegistry | [BaseScan](https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98) |
 | Register AnalystAgent | [`0x9baf599e...`](https://sepolia.basescan.org/tx/0x9baf599e7fd4705704b7b5ef641d87ce9cc78cea059efab69bdc995d33285551) |
+| Register ResearchAgent | [`0x07856248...`](https://sepolia.basescan.org/tx/0x078562487e8144c54b68d34e697fcc6cc2fd287aa13cc13ef8ee9a078223ae1f) |
+| Register AuditorAgent | [`0x6b74db62...`](https://sepolia.basescan.org/tx/0x6b74db62b1bf2b68d67669c1d0ea9c45f80b87d0ec1909e69dfad55617c25af4) |
+| Delegation (Research → Auditor) | [`0x9e24c756...`](https://sepolia.basescan.org/tx/0x9e24c7560f0e28ff44ed3eb6668331c2260cba0831aa815f5d9e745ffe8d7828) |
+| Attestation (Auditor → Research) | [`0x434a0aca...`](https://sepolia.basescan.org/tx/0x434a0aca75d08c4ecfee99959f886405d8c0ca870cc3da127411eda329503b55) |
 
 ## Tests
 
