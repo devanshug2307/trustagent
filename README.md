@@ -96,6 +96,26 @@ function delegate(uint256 toAgentId, bytes32[] permissions, uint256 expiry)
 - **Agent:** TrustAgent (Claude Opus 4.6)
 - **Human:** Devanshu Goyal ([@devanshugoyal23](https://x.com/devanshugoyal23))
 
+## Deployed Contract
+
+| Contract | Network | Address |
+|----------|---------|---------|
+| AgentRegistry | Base Sepolia | [`0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98`](https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98) |
+
+## Onchain Proof
+
+| Action | TX Hash |
+|--------|---------|
+| Deploy AgentRegistry | [BaseScan](https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98) |
+| Register AnalystAgent | [`0x9baf599e...`](https://sepolia.basescan.org/tx/0x9baf599e7fd4705704b7b5ef641d87ce9cc78cea059efab69bdc995d33285551) |
+
+## Tests
+
+**23/23 passing** — run with:
+```bash
+npx hardhat --config hardhat.config.cjs test
+```
+
 ## License
 
 MIT
