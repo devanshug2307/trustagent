@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustAgent — Agent Identity & Reputation Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'SF Mono',monospace;background:#0a0a0f;color:#e0e0e0;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-bottom:1px solid #2a2a4a;padding:24px 32px}
+.header h1{font-size:28px;color:#88aaff;margin-bottom:4px}
+.header p{color:#888;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;padding:24px 32px;max-width:1200px;margin:0 auto}
+.card{background:#12121f;border:1px solid #2a2a4a;border-radius:12px;padding:24px}
+.card h2{font-size:14px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1a1a2f}
+.stat-row:last-child{border-bottom:none}
+.stat-label{color:#888}.stat-value{color:#e0e0e0;font-weight:bold}
+.green{color:#00ff88}.blue{color:#88aaff}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;background:#002244;color:#88aaff}
+.big{font-size:36px;font-weight:bold;color:#88aaff}
+.tx-hash{color:#4a9eff;text-decoration:none;font-size:11px}
+.tx-hash:hover{text-decoration:underline}
+.full-width{grid-column:1/-1}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>TrustAgent <span style="color:#444">|</span> Agent Identity & Reputation</h1>
+<p>Onchain agent registry with identity, reputation, delegation, and discovery. Built for The Synthesis 2026.</p>
+</div>
+<div class="grid">
+<div class="card">
+<h2>Registry Stats</h2>
+<div class="big">6</div>
+<div style="color:#888;font-size:12px;margin-top:4px">Agents Registered Onchain</div><br>
+<div class="stat-row"><span class="stat-label">Contract</span><span class="stat-value"><a class="tx-hash" href="https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98" target="_blank">0xcCEfce...87D98</a></span></div>
+<div class="stat-row"><span class="stat-label">Network</span><span class="stat-value">Base Sepolia</span></div>
+<div class="stat-row"><span class="stat-label">Tests</span><span class="stat-value green">23/23 passing</span></div>
+<div class="stat-row"><span class="stat-label">Delegations</span><span class="stat-value">1 active</span></div>
+<div class="stat-row"><span class="stat-label">Attestations</span><span class="stat-value">1 verified</span></div>
+</div>
+<div class="card">
+<h2>Registered Agents</h2>
+<div class="stat-row"><span class="stat-label">#1 AnalystAgent</span><span class="stat-value blue">analysis, defi</span></div>
+<div class="stat-row"><span class="stat-label">#2 TrustAgent-Demo</span><span class="stat-value blue">identity, reputation</span></div>
+<div class="stat-row"><span class="stat-label">#3 ResearchAgent</span><span class="stat-value blue">research, public-goods</span></div>
+<div class="stat-row"><span class="stat-label">#4 AuditorAgent</span><span class="stat-value blue">audit, verification</span></div>
+</div>
+<div class="card">
+<h2>Features</h2>
+<div class="stat-row"><span class="stat-label">Identity</span><span class="stat-value green">ERC-8004 Compatible</span></div>
+<div class="stat-row"><span class="stat-label">Reputation</span><span class="stat-value green">Peer Attestation Scoring</span></div>
+<div class="stat-row"><span class="stat-label">Delegation</span><span class="stat-value green">Scoped + Time-limited</span></div>
+<div class="stat-row"><span class="stat-label">Discovery</span><span class="stat-value green">Capability-based Search</span></div>
+<div class="stat-row"><span class="stat-label">Public Goods</span><span class="stat-value green">Reputation-weighted Eval</span></div>
+</div>
+<div class="card full-width">
+<h2>Onchain Transactions</h2>
+<div class="stat-row"><span class="stat-label">Deploy AgentRegistry</span><a class="tx-hash" href="https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98" target="_blank">Contract</a></div>
+<div class="stat-row"><span class="stat-label">Register AnalystAgent</span><a class="tx-hash" href="https://sepolia.basescan.org/tx/0x9baf599e7fd4705704b7b5ef641d87ce9cc78cea059efab69bdc995d33285551" target="_blank">0x9baf59...</a></div>
+<div class="stat-row"><span class="stat-label">Register ResearchAgent</span><a class="tx-hash" href="https://sepolia.basescan.org/tx/0x3ec0c2a0d6191da11884e79465aa006efadcd4f68cc8571ee2e56181e9928cbc" target="_blank">0x3ec0c2...</a></div>
+<div class="stat-row"><span class="stat-label">Register AuditorAgent</span><a class="tx-hash" href="https://sepolia.basescan.org/tx/0xf3f57064a6c85dbce0bda6e8b665bc8ce357ce191ca05aa6dc8aa6a42b82ba3c" target="_blank">0xf3f570...</a></div>
+<div class="stat-row"><span class="stat-label">Delegation (Research→Auditor)</span><a class="tx-hash" href="https://sepolia.basescan.org/tx/0x6653bb8f8ae2caef59e310ce6d474f83ac89c0a15c46a76700b5243f9ecb0c49" target="_blank">0x6653bb...</a></div>
+<div class="stat-row"><span class="stat-label">Attestation (score 9/10)</span><a class="tx-hash" href="https://sepolia.basescan.org/tx/0x86d63c7a82807bea1c3acd94129290c420b58fed124043a26ecfaac42dc164cf" target="_blank">0x86d63c...</a></div>
+</div>
+</div>
+<div style="text-align:center;padding:32px;color:#444;font-size:12px">
+TrustAgent — The Synthesis 2026 — Built by Devanshu Goyal<br>
+<a href="https://github.com/devanshug2307/trustagent" style="color:#4a9eff" target="_blank">GitHub</a> ·
+<a href="https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98" style="color:#4a9eff" target="_blank">BaseScan</a>
+</div>
+</body>
+</html>
