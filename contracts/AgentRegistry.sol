@@ -43,7 +43,7 @@ contract AgentRegistry is Ownable {
         uint256 createdAt;
     }
 
-    uint256 public nextAgentId;
+    uint256 public nextAgentId = 1; // Start at 1 so 0 means "not registered"
     uint256 public nextAttestationId;
     uint256 public nextDelegationId;
 
