@@ -1,67 +1,176 @@
-{
-  "project_name": "TrustAgent",
-  "evaluation_timestamp": "2026-03-22T00:00:00Z",
-  "evaluator_registry": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
-  "data_sources": {
-    "github": {
-      "repo": "devanshug2307/trustagent",
-      "metrics": {
-        "total_commits": 47,
-        "unique_contributors": 2,
-        "open_issues": 0,
-        "closed_issues": 3,
-        "stars": 1,
-        "forks": 0,
-        "last_commit_date": "2026-03-22",
-        "license": "MIT",
-        "readme_exists": true,
-        "ci_configured": true
+[
+  {
+    "project_name": "TrustAgent",
+    "evaluation_timestamp": "2026-03-22T05:29:31Z",
+    "evaluator_registry": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+    "data_sources": {
+      "github": {
+        "repo": "devanshug2307/trustagent",
+        "metrics": {
+          "total_commits": 9,
+          "unique_contributors": 1,
+          "open_issues": 0,
+          "closed_issues": 0,
+          "stars": 0,
+          "forks": 0,
+          "last_commit_date": "2026-03-22",
+          "license": "",
+          "readme_exists": true,
+          "ci_configured": false
+        },
+        "collection_method": "GitHub REST API v3 \u2014 LIVE (/repos, /contributors, /commits, /search/issues)",
+        "collection_status": "live"
       },
-      "collection_method": "GitHub REST API v3 (/repos, /contributors, /commits)",
-      "collection_status": "sample_data"
+      "onchain": {
+        "network": "Base Sepolia (chainId 84532)",
+        "contracts": [
+          {
+            "address": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+            "deployed": true,
+            "transaction_count": 0,
+            "nonce": 1,
+            "verified_source": false,
+            "collection_status": "live"
+          }
+        ],
+        "aggregate": {
+          "total_transactions": 0,
+          "total_nonce": 1
+        },
+        "collection_method": "eth_getCode + eth_getTransactionCount (RPC) + BaseScan txlist API \u2014 LIVE",
+        "collection_status": "live"
+      }
     },
-    "onchain": {
-      "network": "Base Sepolia (chainId 84532)",
-      "contracts": [
-        {
-          "address": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
-          "deployed": true,
-          "transaction_count": 6,
-          "unique_callers": 3,
-          "deployment_tx": "0x...(see BaseScan)",
-          "verified_source": true
-        }
+    "scoring_input": {
+      "legitimacy_signals": [
+        "verified_source_code",
+        "license_present",
+        "contributor_count > 1",
+        "readme_exists"
       ],
-      "aggregate": {
-        "total_transactions": 6,
-        "unique_wallets": 3,
-        "total_value_locked_eth": 0.0,
-        "first_activity": "2026-03-21",
-        "last_activity": "2026-03-22"
+      "impact_signals": [
+        "transaction_count",
+        "github_stars",
+        "issues_closed_ratio",
+        "forks"
+      ],
+      "sustainability_signals": [
+        "commit_frequency",
+        "contributor_growth",
+        "ci_configured",
+        "last_commit_recency"
+      ]
+    },
+    "schema_version": "2.0.0"
+  },
+  {
+    "project_name": "Uniswap V3 Core",
+    "evaluation_timestamp": "2026-03-22T05:29:36Z",
+    "evaluator_registry": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+    "data_sources": {
+      "github": {
+        "repo": "Uniswap/v3-core",
+        "metrics": {
+          "total_commits": 1005,
+          "unique_contributors": 16,
+          "open_issues": 86,
+          "closed_issues": 237,
+          "stars": 4969,
+          "forks": 3013,
+          "last_commit_date": "2024-11-03",
+          "license": "NOASSERTION",
+          "readme_exists": true,
+          "ci_configured": true
+        },
+        "collection_method": "GitHub REST API v3 \u2014 LIVE (/repos, /contributors, /commits, /search/issues)",
+        "collection_status": "live"
       },
-      "collection_method": "eth_getTransactionCount + Basescan API",
-      "collection_status": "sample_data"
-    }
+      "onchain": {
+        "network": "Base Sepolia (chainId 84532)",
+        "contracts": [],
+        "aggregate": {
+          "total_transactions": 0,
+          "total_nonce": 0
+        },
+        "collection_method": "eth_getCode + eth_getTransactionCount (RPC) + BaseScan txlist API \u2014 LIVE",
+        "collection_status": "no_contracts_provided"
+      }
+    },
+    "scoring_input": {
+      "legitimacy_signals": [
+        "verified_source_code",
+        "license_present",
+        "contributor_count > 1",
+        "readme_exists"
+      ],
+      "impact_signals": [
+        "transaction_count",
+        "github_stars",
+        "issues_closed_ratio",
+        "forks"
+      ],
+      "sustainability_signals": [
+        "commit_frequency",
+        "contributor_growth",
+        "ci_configured",
+        "last_commit_recency"
+      ]
+    },
+    "schema_version": "2.0.0"
   },
-  "scoring_input": {
-    "legitimacy_signals": [
-      "verified_source_code",
-      "license_present",
-      "contributor_count > 1",
-      "readme_exists"
-    ],
-    "impact_signals": [
-      "transaction_count",
-      "unique_wallets",
-      "github_stars",
-      "issues_closed_ratio"
-    ],
-    "sustainability_signals": [
-      "commit_frequency",
-      "contributor_growth",
-      "ci_configured",
-      "last_commit_recency"
-    ]
-  },
-  "schema_version": "1.0.0"
-}
+  {
+    "project_name": "OpenZeppelin Contracts",
+    "evaluation_timestamp": "2026-03-22T05:29:38Z",
+    "evaluator_registry": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+    "data_sources": {
+      "github": {
+        "repo": "OpenZeppelin/openzeppelin-contracts",
+        "metrics": {
+          "total_commits": 4085,
+          "unique_contributors": 100,
+          "open_issues": 341,
+          "closed_issues": 1851,
+          "stars": 27037,
+          "forks": 12418,
+          "last_commit_date": "2026-03-22",
+          "license": "MIT",
+          "readme_exists": true,
+          "ci_configured": true
+        },
+        "collection_method": "GitHub REST API v3 \u2014 LIVE (/repos, /contributors, /commits, /search/issues)",
+        "collection_status": "live"
+      },
+      "onchain": {
+        "network": "Base Sepolia (chainId 84532)",
+        "contracts": [],
+        "aggregate": {
+          "total_transactions": 0,
+          "total_nonce": 0
+        },
+        "collection_method": "eth_getCode + eth_getTransactionCount (RPC) + BaseScan txlist API \u2014 LIVE",
+        "collection_status": "no_contracts_provided"
+      }
+    },
+    "scoring_input": {
+      "legitimacy_signals": [
+        "verified_source_code",
+        "license_present",
+        "contributor_count > 1",
+        "readme_exists"
+      ],
+      "impact_signals": [
+        "transaction_count",
+        "github_stars",
+        "issues_closed_ratio",
+        "forks"
+      ],
+      "sustainability_signals": [
+        "commit_frequency",
+        "contributor_growth",
+        "ci_configured",
+        "last_commit_recency"
+      ]
+    },
+    "schema_version": "2.0.0"
+  }
+]

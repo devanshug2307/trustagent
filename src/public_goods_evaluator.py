@@ -29,7 +29,11 @@ from __future__ import annotations
 
 import json
 import math
+import ssl
+import urllib.request
+import urllib.error
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from typing import Optional
 
 # ---------------------------------------------------------------------------
@@ -386,6 +390,198 @@ class PublicGoodsEvaluator:
         for sp in scored:
             sp.recommended_allocation = round(allocated[sp.name], 2)
 
+    # ── HTTP helper ─────────────────────────────────────────────
+    @staticmethod
+    def _api_get(url: str, headers: dict | None = None, timeout: int = 15) -> dict | list | None:
+        """
+        Perform an HTTPS GET and return parsed JSON, or None on failure.
+        Uses only stdlib (urllib) — no third-party HTTP library required.
+        """
+        hdrs = {"User-Agent": "TrustAgent/1.0", "Accept": "application/json"}
+        if headers:
+            hdrs.update(headers)
+        req = urllib.request.Request(url, headers=hdrs)
+        ctx = ssl.create_default_context()
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=ctx) as resp:
+                return json.loads(resp.read().decode())
+        except (urllib.error.URLError, urllib.error.HTTPError, json.JSONDecodeError, OSError) as exc:
+            print(f"  [warn] API call failed for {url}: {exc}")
+            return None
+
+    # ── GitHub helpers ────────────────────────────────────────────
+    @staticmethod
+    def _parse_github_repo(raw: str) -> str:
+        """
+        Normalise various GitHub URL formats to 'owner/repo'.
+
+        Accepts:
+          - "owner/repo"
+          - "https://github.com/owner/repo"
+          - "https://github.com/owner/repo.git"
+          - "github.com/owner/repo/anything"
+        """
+        raw = raw.strip().rstrip("/")
+        if raw.endswith(".git"):
+            raw = raw[:-4]
+        # Strip protocol + domain
+        for prefix in ("https://github.com/", "http://github.com/", "github.com/"):
+            if raw.startswith(prefix):
+                raw = raw[len(prefix):]
+                break
+        # Take only the first two path segments (owner/repo)
+        parts = raw.split("/")
+        if len(parts) >= 2:
+            return f"{parts[0]}/{parts[1]}"
+        return raw  # best effort
+
+    def _fetch_github_data(self, owner_repo: str) -> dict:
+        """
+        Call the GitHub REST API (no auth, 60 req/hr rate limit) and return
+        a filled metrics dict plus collection status.
+        """
+        base = f"https://api.github.com/repos/{owner_repo}"
+        metrics = {
+            "total_commits": 0,
+            "unique_contributors": 0,
+            "open_issues": 0,
+            "closed_issues": 0,
+            "stars": 0,
+            "forks": 0,
+            "last_commit_date": "",
+            "license": "",
+            "readme_exists": False,
+            "ci_configured": False,
+        }
+        status = "api_error"
+
+        # 1. Main repo metadata
+        repo_data = self._api_get(base)
+        if repo_data is None or isinstance(repo_data, list):
+            return {"metrics": metrics, "collection_status": status}
+
+        metrics["stars"] = repo_data.get("stargazers_count", 0)
+        metrics["forks"] = repo_data.get("forks_count", 0)
+        metrics["open_issues"] = repo_data.get("open_issues_count", 0)
+        lic = repo_data.get("license")
+        if lic and isinstance(lic, dict):
+            metrics["license"] = lic.get("spdx_id") or lic.get("name") or ""
+        metrics["last_commit_date"] = (repo_data.get("pushed_at") or "")[:10]
+        status = "live"
+
+        # 2. Contributors count (paginated — just first page, per_page=1 trick with Link header)
+        contribs = self._api_get(f"{base}/contributors?per_page=100&anon=true")
+        if isinstance(contribs, list):
+            metrics["unique_contributors"] = len(contribs)
+
+        # 3. Commit count — use the /commits endpoint with per_page=1 and parse
+        #    the Link header's "last" page number.
+        try:
+            req = urllib.request.Request(
+                f"{base}/commits?per_page=1",
+                headers={"User-Agent": "TrustAgent/1.0", "Accept": "application/json"},
+            )
+            ctx = ssl.create_default_context()
+            with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
+                link_header = resp.getheader("Link") or ""
+                # Parse "page=N" from the rel="last" link
+                import re
+                match = re.search(r'page=(\d+)>;\s*rel="last"', link_header)
+                if match:
+                    metrics["total_commits"] = int(match.group(1))
+                else:
+                    # Only one page — count items
+                    items = json.loads(resp.read().decode())
+                    metrics["total_commits"] = len(items) if isinstance(items, list) else 0
+        except Exception:
+            pass
+
+        # 4. Closed issues count via search API
+        search_url = (
+            f"https://api.github.com/search/issues"
+            f"?q=repo:{owner_repo}+type:issue+state:closed&per_page=1"
+        )
+        search_data = self._api_get(search_url)
+        if isinstance(search_data, dict):
+            metrics["closed_issues"] = search_data.get("total_count", 0)
+
+        # 5. README existence check (HEAD-style via contents API)
+        readme_data = self._api_get(f"{base}/readme")
+        metrics["readme_exists"] = readme_data is not None and isinstance(readme_data, dict)
+
+        # 6. CI configured — check for .github/workflows directory
+        ci_data = self._api_get(f"{base}/contents/.github/workflows")
+        metrics["ci_configured"] = isinstance(ci_data, list) and len(ci_data) > 0
+
+        return {"metrics": metrics, "collection_status": status}
+
+    # ── On-chain helpers ──────────────────────────────────────────
+    def _fetch_onchain_data(self, address: str, network: str = "base-sepolia") -> dict:
+        """
+        Fetch transaction count for a contract address using the Base Sepolia
+        RPC (eth_getTransactionCount) and, if available, the BaseScan API.
+
+        Falls back gracefully when APIs are unreachable.
+        """
+        result = {
+            "address": address,
+            "deployed": False,
+            "transaction_count": 0,
+            "nonce": 0,
+            "verified_source": False,
+        }
+        status = "api_error"
+
+        # --- Strategy 1: JSON-RPC eth_getTransactionCount + eth_getCode ---
+        rpc_url = self.rpc_url  # default: https://sepolia.base.org
+        for method, key in [
+            ("eth_getCode", "has_code"),
+            ("eth_getTransactionCount", "nonce"),
+        ]:
+            payload = json.dumps({
+                "jsonrpc": "2.0", "id": 1, "method": method,
+                "params": [address, "latest"],
+            }).encode()
+            try:
+                req = urllib.request.Request(
+                    rpc_url,
+                    data=payload,
+                    headers={"Content-Type": "application/json", "User-Agent": "TrustAgent/1.0"},
+                )
+                ctx = ssl.create_default_context()
+                with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
+                    body = json.loads(resp.read().decode())
+                    hex_val = body.get("result", "0x0")
+                    if method == "eth_getCode":
+                        result["deployed"] = hex_val not in (None, "0x", "0x0")
+                    else:
+                        result["nonce"] = int(hex_val, 16)
+                    status = "live"
+            except Exception as exc:
+                print(f"  [warn] RPC {method} failed for {address}: {exc}")
+
+        # --- Strategy 2: BaseScan API (no key = 1 req/5s, limited) -------
+        basescan_url = (
+            f"https://api-sepolia.basescan.org/api"
+            f"?module=account&action=txlist&address={address}"
+            f"&startblock=0&endblock=99999999&page=1&offset=100&sort=asc"
+        )
+        txlist = self._api_get(basescan_url, timeout=20)
+        if isinstance(txlist, dict) and txlist.get("status") == "1":
+            txs = txlist.get("result", [])
+            if isinstance(txs, list):
+                result["transaction_count"] = len(txs)
+                status = "live"
+        elif isinstance(txlist, dict) and txlist.get("message") == "No transactions found":
+            result["transaction_count"] = 0
+            status = "live"
+
+        # --- Strategy 3: try Etherscan mainnet if the address looks mainnet ---
+        # (skipped for sepolia — we already tried BaseScan above)
+
+        result["collection_status"] = status
+        return result
+
     # ── Data Collection (Octant Track 1) ────────────────────────
     def collect_project_data(
         self,
@@ -394,25 +590,22 @@ class PublicGoodsEvaluator:
         contract_addresses: list[str] | None = None,
     ) -> dict:
         """
-        Gather multi-source evidence for a public goods project.
+        Gather multi-source evidence for a public goods project via LIVE
+        API calls to GitHub and on-chain RPCs / block explorers.
 
         Collects data from two categories:
           1. **Off-chain (GitHub):** commit count, unique contributors, open/closed
              issues, stars, forks, last commit date, license.
-          2. **On-chain:** contract deployments, total transaction count, unique
-             interacting wallets, TVL if applicable.
-
-        This method defines the canonical data schema that the evaluator expects.
-        In production it would call the GitHub API and an RPC/indexer; here it
-        returns the schema populated with realistic sample data so judges can
-        inspect the structure.
+          2. **On-chain:** contract deployments, transaction count via RPC +
+             BaseScan API.
 
         Parameters
         ----------
         project_name : str
             Human-readable project name.
         github_repo : str
-            GitHub repo in "owner/repo" format (e.g. "devanshug2307/trustagent").
+            GitHub repo — accepts ``"owner/repo"``, a full GitHub URL, or a
+            ``.git`` URL.  Parsed automatically.
         contract_addresses : list[str] | None
             Deployed contract addresses to query on-chain metrics for.
 
@@ -423,89 +616,57 @@ class PublicGoodsEvaluator:
         if contract_addresses is None:
             contract_addresses = []
 
-        # ----- Off-chain evidence (GitHub) -----
-        # In production: requests.get(f"https://api.github.com/repos/{github_repo}")
+        now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        # ----- Off-chain evidence (GitHub — LIVE) -----
+        owner_repo = self._parse_github_repo(github_repo) if github_repo else ""
+        if owner_repo and "/" in owner_repo:
+            print(f"  Fetching GitHub data for {owner_repo} ...")
+            gh = self._fetch_github_data(owner_repo)
+        else:
+            gh = {
+                "metrics": {
+                    "total_commits": 0, "unique_contributors": 0,
+                    "open_issues": 0, "closed_issues": 0,
+                    "stars": 0, "forks": 0,
+                    "last_commit_date": "", "license": "",
+                    "readme_exists": False, "ci_configured": False,
+                },
+                "collection_status": "no_repo_provided",
+            }
+
         github_evidence = {
-            "repo": github_repo or f"{project_name.lower().replace(' ', '-')}/main",
-            "metrics": {
-                "total_commits": 0,
-                "unique_contributors": 0,
-                "open_issues": 0,
-                "closed_issues": 0,
-                "stars": 0,
-                "forks": 0,
-                "last_commit_date": "",
-                "license": "",
-                "readme_exists": False,
-                "ci_configured": False,
-            },
-            "collection_method": "GitHub REST API v3 (/repos, /contributors, /commits)",
-            "collection_status": "schema_only",
+            "repo": owner_repo or f"{project_name.lower().replace(' ', '-')}/main",
+            "metrics": gh["metrics"],
+            "collection_method": "GitHub REST API v3 — LIVE (/repos, /contributors, /commits, /search/issues)",
+            "collection_status": gh["collection_status"],
         }
 
-        # Populate with sample data when the repo matches TrustAgent
-        if "trustagent" in (github_repo or project_name).lower():
-            github_evidence["metrics"] = {
-                "total_commits": 47,
-                "unique_contributors": 2,
-                "open_issues": 0,
-                "closed_issues": 3,
-                "stars": 1,
-                "forks": 0,
-                "last_commit_date": "2026-03-22",
-                "license": "MIT",
-                "readme_exists": True,
-                "ci_configured": True,
-            }
-            github_evidence["collection_status"] = "sample_data"
-
-        # ----- On-chain evidence -----
-        # In production: query Base Sepolia RPC or a block explorer API
+        # ----- On-chain evidence (RPC + BaseScan — LIVE) -----
         onchain_evidence = {
             "network": "Base Sepolia (chainId 84532)",
             "contracts": [],
             "aggregate": {
                 "total_transactions": 0,
-                "unique_wallets": 0,
-                "total_value_locked_eth": 0.0,
-                "first_activity": "",
-                "last_activity": "",
+                "total_nonce": 0,
             },
-            "collection_method": "eth_getTransactionCount + Basescan API",
-            "collection_status": "schema_only",
+            "collection_method": "eth_getCode + eth_getTransactionCount (RPC) + BaseScan txlist API — LIVE",
+            "collection_status": "no_contracts_provided" if not contract_addresses else "api_error",
         }
 
         for addr in contract_addresses:
-            contract_data = {
-                "address": addr,
-                "deployed": True,
-                "transaction_count": 0,
-                "unique_callers": 0,
-                "deployment_tx": "",
-                "verified_source": False,
-            }
-            # Populate sample data for the known TrustAgent registry
-            if addr.lower() == "0xccefce0eb734df5dfcbd68db6cf2bc80e8a87d98":
-                contract_data.update({
-                    "transaction_count": 6,
-                    "unique_callers": 3,
-                    "deployment_tx": "0x...(see BaseScan)",
-                    "verified_source": True,
-                })
-                onchain_evidence["aggregate"].update({
-                    "total_transactions": 6,
-                    "unique_wallets": 3,
-                    "first_activity": "2026-03-21",
-                    "last_activity": "2026-03-22",
-                })
-                onchain_evidence["collection_status"] = "sample_data"
-
-            onchain_evidence["contracts"].append(contract_data)
+            print(f"  Fetching on-chain data for {addr} ...")
+            cdata = self._fetch_onchain_data(addr)
+            onchain_evidence["contracts"].append(cdata)
+            onchain_evidence["aggregate"]["total_transactions"] += cdata.get("transaction_count", 0)
+            onchain_evidence["aggregate"]["total_nonce"] += cdata.get("nonce", 0)
+            if cdata.get("collection_status") == "live":
+                onchain_evidence["collection_status"] = "live"
 
         # ----- Compose full evidence packet -----
         evidence = {
             "project_name": project_name,
-            "evaluation_timestamp": "2026-03-22T00:00:00Z",
+            "evaluation_timestamp": now_iso,
             "evaluator_registry": self.registry_address,
             "data_sources": {
                 "github": github_evidence,
@@ -520,9 +681,9 @@ class PublicGoodsEvaluator:
                 ],
                 "impact_signals": [
                     "transaction_count",
-                    "unique_wallets",
                     "github_stars",
                     "issues_closed_ratio",
+                    "forks",
                 ],
                 "sustainability_signals": [
                     "commit_frequency",
@@ -531,7 +692,7 @@ class PublicGoodsEvaluator:
                     "last_commit_recency",
                 ],
             },
-            "schema_version": "1.0.0",
+            "schema_version": "2.0.0",
         }
 
         return evidence
@@ -666,25 +827,68 @@ def demo():
 
     print(evaluator.format_report(results))
 
-    # ── Octant Data Collection demo ──────────────────────────────
+    # ── Octant Data Collection demo — LIVE API calls ────────────
     print("\n\n" + "=" * 72)
-    print("  Octant Data Collection Demo")
-    print("  Gathering project evidence (GitHub + On-chain)")
-    print("=" * 72 + "\n")
+    print("  Octant Data Collection — LIVE API Demo")
+    print("  Gathering REAL project evidence (GitHub REST API + On-chain RPC)")
+    print("=" * 72)
 
-    evidence = evaluator.collect_project_data(
-        project_name="TrustAgent",
-        github_repo="devanshug2307/trustagent",
-        contract_addresses=["0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98"],
-    )
+    demo_projects = [
+        {
+            "name": "TrustAgent",
+            "github_repo": "devanshug2307/trustagent",
+            "contract_addresses": ["0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98"],
+        },
+        {
+            "name": "Uniswap V3 Core",
+            "github_repo": "https://github.com/Uniswap/v3-core",
+            "contract_addresses": [],
+        },
+        {
+            "name": "OpenZeppelin Contracts",
+            "github_repo": "OpenZeppelin/openzeppelin-contracts",
+            "contract_addresses": [],
+        },
+    ]
 
     import os
+    all_evidence = []
+
+    for proj in demo_projects:
+        print(f"\n{'─' * 60}")
+        print(f"  Project: {proj['name']}")
+        print(f"{'─' * 60}")
+
+        evidence = evaluator.collect_project_data(
+            project_name=proj["name"],
+            github_repo=proj["github_repo"],
+            contract_addresses=proj.get("contract_addresses", []),
+        )
+        all_evidence.append(evidence)
+
+        gh = evidence["data_sources"]["github"]
+        m = gh["metrics"]
+        print(f"\n  GitHub ({gh['collection_status']}):")
+        print(f"    Stars: {m['stars']}  |  Forks: {m['forks']}  |  Contributors: {m['unique_contributors']}")
+        print(f"    Commits: {m['total_commits']}  |  Open issues: {m['open_issues']}  |  Closed issues: {m['closed_issues']}")
+        print(f"    License: {m['license']}  |  README: {m['readme_exists']}  |  CI: {m['ci_configured']}")
+        print(f"    Last push: {m['last_commit_date']}")
+
+        oc = evidence["data_sources"]["onchain"]
+        if oc["contracts"]:
+            print(f"\n  On-chain ({oc['collection_status']}):")
+            for c in oc["contracts"]:
+                print(f"    {c['address'][:20]}... deployed={c['deployed']}  tx_count={c.get('transaction_count', 0)}  nonce={c.get('nonce', 0)}")
+        else:
+            print(f"\n  On-chain: no contracts provided")
+
     output_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "octant_demo_output.json")
     with open(output_path, "w") as f:
-        json.dump(evidence, f, indent=2)
+        json.dump(all_evidence, f, indent=2)
 
-    print(json.dumps(evidence, indent=2))
-    print(f"\n  Saved to {output_path}")
+    print(f"\n{'=' * 72}")
+    print(f"  All {len(all_evidence)} evidence packets saved to {output_path}")
+    print(f"{'=' * 72}")
 
 
 if __name__ == "__main__":
