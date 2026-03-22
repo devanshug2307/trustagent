@@ -128,49 +128,86 @@ npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --netwo
 python3 src/public_goods_evaluator.py   # run offline demo
 ```
 
-## Delegation as Escrow: Trust Primitives for Agent Coordination (Arkhai Track)
+## Alkahest/Arkhai Escrow Integration (Arkhai Track)
 
-TrustAgent's delegation protocol already implements scoped, time-limited, revocable permissions between agents. This same mechanism naturally extends to **escrow-like trust primitives** for autonomous agent commerce:
+TrustAgent integrates the **alkahest-ts SDK (v0.7.5)** as a load-bearing escrow layer for agent-to-agent commerce on Base Sepolia. Alkahest provides conditional peer-to-peer escrow built on EAS (Ethereum Attestation Service) -- TrustAgent uses it so that payment for agent tasks is only released when the worker passes an on-chain reputation check.
 
-### Lock-Perform-Release Pattern
+### How It Works
 
 ```
-┌─────────────┐         ┌─────────────┐
-│  Agent A     │         │  Agent B     │
-│  (Requester) │         │  (Provider)  │
-└──────┬───────┘         └──────┬───────┘
-       │                        │
-       │  1. LOCK: delegate()   │
-       │  ─────────────────────>│   Agent A grants scoped permissions
-       │  permissions=[EXECUTE] │   (time-limited, revocable)
-       │  expiry=1h             │
-       │                        │
-       │  2. PERFORM: agent B   │
-       │     executes task      │   Agent B operates within scoped
-       │  <─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │   permissions (on-chain audit trail)
-       │                        │
-       │  3a. RELEASE: attest() │
-       │  ─────────────────────>│   Success → attestCompletion(score>=5)
-       │  score=9, "Excellent"  │   Reputation increases, delegation expires
-       │                        │
-       │  3b. REVOKE (on fail): │
-       │  revokeDelegation()    │   Failure → revoke + attestCompletion(score<5)
-       │  ─────────────────────>│   Reputation decreases, permissions removed
-       │                        │
+┌─────────────┐    ┌──────────────┐    ┌─────────────┐
+│  Delegator   │    │  TrustAgent  │    │   Worker    │
+│  (pays ETH)  │    │  (oracle)    │    │  (agent)    │
+└──────┬───────┘    └──────┬───────┘    └──────┬──────┘
+       │                   │                   │
+       │ 1. CREATE ESCROW  │                   │
+       │ deposit ETH into  │                   │
+       │ NativeTokenEscrow │                   │
+       │ demand: task +    │                   │
+       │   min reputation  │                   │
+       │ oracle: TrustAgent│                   │
+       │──────────────────>│                   │
+       │                   │                   │
+       │                   │ 2. FULFILL TASK   │
+       │                   │<──────────────────│
+       │                   │ StringObligation  │
+       │                   │ (result as EAS    │
+       │                   │  attestation)     │
+       │                   │                   │
+       │                   │ 3. ARBITRATE      │
+       │                   │ Read AgentRegistry│
+       │                   │ Check reputation  │
+       │                   │ score >= threshold│
+       │                   │──> approve/reject │
+       │                   │                   │
+       │                   │         4. COLLECT│
+       │                   │   (if approved)   │
+       │                   │──────────────────>│
+       │                   │   Worker gets ETH │
 ```
 
-**How it maps to escrow:**
+**Core dependency:** `alkahest-ts` v0.7.5 -- all escrow creation, fulfillment, arbitration, and collection go through Alkahest's on-chain contracts.
 
-| Escrow Concept | TrustAgent Implementation | Contract Function |
+### Escrow-Backed Delegation
+
+| Step | Alkahest SDK Call | What Happens |
 |---|---|---|
-| **Lock funds/permissions** | `delegate(toAgentId, permissions, expiry)` | Creates time-bound scoped access |
-| **Agent performs work** | Agent operates within delegated scope | Permissions checked via `isDelegationActive()` |
-| **Release on success** | `attestCompletion(agentId, taskId, score>=5)` | Increases reputation, records receipt |
-| **Revoke on failure** | `revokeDelegation(id)` + `attestCompletion(score<5)` | Kills permissions, decreases reputation |
-| **Auto-expire (timeout)** | Built-in: `expiry` parameter on every delegation | `isDelegationActive()` returns false after expiry |
-| **Audit trail** | Every action emits events + stores on-chain | `DelegationCreated`, `AttestationCreated`, `ReputationUpdated` |
+| **1. Escrow** | `nativeToken.escrow.nonTierable.create()` | Delegator locks ETH in Alkahest escrow with a `TrustedOracleArbiter` demand |
+| **2. Demand** | `encodeTrustedOracleDemand()` | Demand encodes: task description, required capability, minimum reputation score, AgentRegistry address |
+| **3. Fulfill** | `stringObligation.doObligation()` | Worker submits task result as an EAS attestation referencing the escrow |
+| **4. Arbitrate** | `arbiters.general.trustedOracle.arbitrate()` | TrustAgent oracle reads worker's on-chain reputation from AgentRegistry, approves if score >= threshold |
+| **5. Collect** | `nativeToken.escrow.nonTierable.collect()` | Approved worker withdraws the escrowed ETH |
+| **5b. Reclaim** | `nativeToken.escrow.nonTierable.reclaimExpired()` | If rejected or expired, delegator reclaims funds |
 
-This means TrustAgent can serve as the **trust layer for any agent-to-agent transaction** — the delegation protocol is already an escrow primitive, just framed as permission management rather than fund custody.
+### Why This Is Load-Bearing
+
+Alkahest is not decorative here -- it is the settlement layer:
+
+- **No Alkahest = no payment.** The worker cannot receive funds without an Alkahest escrow + arbitration chain.
+- **Trust gate = AgentRegistry.** The oracle decision is based on real on-chain reputation data (`getReputation()` from the deployed AgentRegistry contract).
+- **EAS attestation chain.** Every step (escrow, fulfillment, arbitration) produces a verifiable on-chain attestation via EAS on Base Sepolia.
+- **Production oracle mode.** `node src/alkahest_escrow.mjs --oracle` runs TrustAgent as a long-running oracle that auto-arbitrates incoming requests using `arbitrateMany()`.
+
+### Alkahest Contracts (Base Sepolia)
+
+| Contract | Address |
+|---|---|
+| EAS | `0x4200000000000000000000000000000000000021` |
+| TrustedOracleArbiter | `0x3664b11BcCCeCA27C21BBAB43548961eD14d4D6D` |
+| StringObligation | `0x544873C22A3228798F91a71C4ef7a9bFe96E7CE0` |
+| NativeTokenEscrowObligation | `0x8a1172D32B8cEf14094cF1E7d6F3d1A36D949FDe` |
+| ERC20EscrowObligation | `0x1Fe964348Ec42D9Bb1A072503ce8b4744266FF43` |
+
+### SDK Verification Proof
+
+7/7 checks passing -- see `alkahest_proof.json` for full output:
+
+```bash
+npm run alkahest:test     # verify SDK + contracts reachable (no wallet needed)
+npm run alkahest:proof    # run test and write alkahest_proof.json
+npm run alkahest:oracle   # start TrustAgent as Alkahest oracle listener
+npm run alkahest:demo     # full escrow flow (needs funded wallets)
+```
 
 ## ERC-8004 Alignment: The Three Pillars
 
@@ -321,7 +358,7 @@ npm run openserv:start   # start agent on OpenServ platform (requires OPENSERV_A
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
 - **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
 - **Octant Public Goods**: Reputation-weighted project evaluation with live multi-source data collection (GitHub REST API + BaseScan API)
-- **Arkhai Escrow**: Delegation protocol extends to lock-perform-release trust primitives for agent commerce
+- **Arkhai/Alkahest Escrow**: Real `alkahest-ts` v0.7.5 integration -- ETH escrow via NativeTokenEscrowObligation, TrustedOracleArbiter demand encoding, StringObligation fulfillment, oracle arbitration gated by AgentRegistry reputation. 7/7 SDK verification checks passing. Alkahest is the settlement layer: no escrow = no payment.
 
 ## Built By
 
@@ -386,6 +423,7 @@ trustagent/
 │   ├── multi-agent-demo.cjs     # Multi-agent onchain demo (6 TXs)
 │   └── onchain-demo.cjs         # Single agent demo
 ├── src/
+│   ├── alkahest_escrow.mjs         # Arkhai: alkahest-ts escrow with TrustedOracleArbiter + reputation gate
 │   ├── openserv_agent.mjs          # OpenServ: SDK agent with 4 on-chain capabilities
 │   ├── public_goods_evaluator.py   # Octant: reputation-weighted evaluation + data collection
 │   ├── olas_integration.py         # Olas: Pearl-compatible agent services + monetization
@@ -396,6 +434,7 @@ trustagent/
 │   └── index.html               # Live dashboard
 ├── agent.json                   # Agent identity + capabilities descriptor
 ├── agent_log.json               # Full agent activity log
+├── alkahest_proof.json           # Alkahest SDK verification proof (7/7 checks)
 ├── openserv_proof.txt           # OpenServ live platform integration proof (11 API calls)
 ├── openserv_live_proof.json     # Complete JSON record of all live API interactions
 ├── octant_demo_output.json      # Octant evaluator demo output

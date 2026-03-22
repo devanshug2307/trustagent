@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-03-22T07:46:26.484Z",
+  "test": "alkahest-ts SDK integration verification",
+  "sdkVersion": "0.7.5",
+  "chain": "Base Sepolia (chainId 84532)",
+  "steps": [
+    {
+      "step": "1. SDK import",
+      "status": "PASS",
+      "exports": [
+        "makeClient",
+        "contractAddresses",
+        "supportedChains",
+        "encodeTrustedOracleDemand"
+      ],
+      "supportedChains": [
+        "Base Sepolia",
+        "Sepolia",
+        "Filecoin Calibration",
+        "GenLayer Bradbury",
+        "Ethereum"
+      ]
+    },
+    {
+      "step": "2. Base Sepolia contract addresses",
+      "status": "PASS",
+      "eas": "0x4200000000000000000000000000000000000021",
+      "trustedOracleArbiter": "0x3664b11BcCCeCA27C21BBAB43548961eD14d4D6D",
+      "stringObligation": "0x544873C22A3228798F91a71C4ef7a9bFe96E7CE0",
+      "nativeTokenEscrowObligation": "0x8a1172D32B8cEf14094cF1E7d6F3d1A36D949FDe",
+      "erc20EscrowObligation": "0x1Fe964348Ec42D9Bb1A072503ce8b4744266FF43"
+    },
+    {
+      "step": "3. Demand encode/decode round-trip",
+      "status": "PASS",
+      "innerDemandBytes": 578,
+      "fullDemandBytes": 834,
+      "decodedOracle": "0x0000000000000000000000000000000000000001",
+      "decodedTask": "Analyze DeFi protocol risk",
+      "decodedMinRep": 5000
+    },
+    {
+      "step": "4. Alkahest client creation",
+      "status": "PASS",
+      "hasNativeTokenEscrow": true,
+      "hasStringObligation": true,
+      "hasTrustedOracleArbiter": true,
+      "hasArbitrationListener": true,
+      "contractAddresses": {
+        "trustedOracleArbiter": "0x3664b11BcCCeCA27C21BBAB43548961eD14d4D6D",
+        "stringObligation": "0x544873C22A3228798F91a71C4ef7a9bFe96E7CE0",
+        "nativeTokenEscrow": "0x8a1172D32B8cEf14094cF1E7d6F3d1A36D949FDe",
+        "eas": "0x4200000000000000000000000000000000000021"
+      }
+    },
+    {
+      "step": "5. On-chain contract reachability",
+      "status": "PASS",
+      "eas": "0x4200000000000000000000000000000000000021 (4120 bytes)",
+      "trustedOracleArbiter": "0x3664b11BcCCeCA27C21BBAB43548961eD14d4D6D (3934 bytes)",
+      "stringObligation": "0x544873C22A3228798F91a71C4ef7a9bFe96E7CE0 (7990 bytes)",
+      "nativeTokenEscrow": "0x8a1172D32B8cEf14094cF1E7d6F3d1A36D949FDe (14586 bytes)",
+      "agentRegistry": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98 (13440 bytes)"
+    },
+    {
+      "step": "6. AgentRegistry live data",
+      "status": "PASS",
+      "totalRegisteredAgents": 5,
+      "sampleAgent": {
+        "agentId": 1,
+        "reputationScore": 5000,
+        "tasksCompleted": 0,
+        "tasksFailed": 0,
+        "totalAttestations": 0
+      }
+    },
+    {
+      "step": "7. Escrow flow architecture",
+      "status": "PASS",
+      "pattern": "Delegator -> Escrow(ETH) -> Worker(StringObligation) -> Oracle(TrustAgent) -> Collect",
+      "flowMethods": {
+        "createEscrow": "function",
+        "fulfillTask": "function",
+        "arbitrate": "function",
+        "collectEscrow": "function",
+        "reclaimExpired": "function",
+        "encodeDemand": "function",
+        "decodeDemand": "function",
+        "waitForArbitration": "function",
+        "listenForRequests": "function"
+      },
+      "demandEncoding": {
+        "arbiter": "0x3664b11BcCCeCA27C21BBAB43548961eD14d4D6D",
+        "oracle": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "taskDescription": "Test task",
+        "requiredCapability": "audit",
+        "minReputationScore": 7500
+      }
+    }
+  ],
+  "passed": true,
+  "summary": {
+    "passed": 7,
+    "total": 7,
+    "allPassed": true
+  }
+}

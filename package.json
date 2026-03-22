@@ -6,7 +6,11 @@
   "scripts": {
     "test": "npx hardhat --config hardhat.config.cjs test",
     "openserv:test": "node src/openserv_agent.mjs --test",
-    "openserv:start": "node src/openserv_agent.mjs"
+    "openserv:start": "node src/openserv_agent.mjs",
+    "alkahest:test": "node src/alkahest_escrow.mjs --test",
+    "alkahest:proof": "node src/alkahest_escrow.mjs --proof",
+    "alkahest:oracle": "node src/alkahest_escrow.mjs --oracle",
+    "alkahest:demo": "node src/alkahest_escrow.mjs"
   },
   "repository": {
     "type": "git",
@@ -25,6 +29,8 @@
     "hardhat": "^2.28.6"
   },
   "dependencies": {
-    "@openserv-labs/sdk": "^2.4.1"
+    "@openserv-labs/sdk": "^2.4.1",
+    "alkahest-ts": "^0.7.5",
+    "viem": "^2.47.6"
   }
 }
