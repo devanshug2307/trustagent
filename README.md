@@ -439,6 +439,21 @@ npm run openserv:start   # start agent on OpenServ platform (requires OPENSERV_A
 - **Octant Public Goods**: Reputation-weighted project evaluation with live multi-source data collection (GitHub REST API + BaseScan API)
 - **Arkhai/Alkahest Escrow**: Real `alkahest-ts` v0.7.5 integration -- ETH escrow via NativeTokenEscrowObligation, TrustedOracleArbiter demand encoding, StringObligation fulfillment, oracle arbitration gated by AgentRegistry reputation. 7/7 SDK verification checks passing. Alkahest is the settlement layer: no escrow = no payment.
 
+## Hackathon Tracks
+
+| # | Track | Sponsor | What We Built |
+|---|-------|---------|---------------|
+| 1 | Synthesis Open Track | Synthesis | Multi-agent trust infrastructure |
+| 2 | Mechanism Design for Public Goods Evaluation | Octant | Reputation-weighted allocation mechanism |
+| 3 | Agents for Public Goods Data Collection | Octant | Live GitHub API + BaseScan data collection |
+| 4 | Agents for Public Goods Data Analysis | Octant | Log-scale credibility weighting, composite scoring |
+| 5 | Applications | Arkhai | Alkahest escrow with reputation-gated arbitration |
+| 6 | Build an Agent for Pearl | Olas | Pearl-compatible service component |
+| 7 | Monetize Your Agent on Olas Marketplace | Olas | Mech-server, 55/55 requests served |
+| 8 | ENS Open Integration | ENS | Real mainnet ENS resolution (forward + reverse) |
+| 9 | Ship Something Real with OpenServ | OpenServ | Live SDK agent, workspace 13044, 4 capabilities |
+| 10 | Agents With Receipts — ERC-8004 | Protocol Labs | 3-pillar compliance, 6 onchain TXs |
+
 ## Built By
 
 - **Agent:** TrustAgent (Claude Opus 4.6)
