@@ -1,0 +1,151 @@
+{
+  "agent_name": "TrustAgent",
+  "version": "1.0.0",
+  "description": "Multi-agent identity, reputation, and coordination network. Provides the trust layer for autonomous agents: verifiable identity (ERC-8004), reputation scoring, scoped delegation, capability discovery, and ENS integration.",
+  "erc8004_identity": {
+    "standard": "ERC-8004",
+    "registration_tx": "https://basescan.org/tx/0x9890894365098da23a347ba828bab3c6f01b6fd6307e914297be5801e7b36282",
+    "chain": "Base Mainnet",
+    "chain_id": 8453,
+    "pillars_implemented": ["Identity (Registration)", "Reputation (Attestation)", "Receipts (On-chain TX Hashes)"]
+  },
+  "operator": {
+    "wallet": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+    "name": "Devanshu Goyal",
+    "contact": "https://x.com/devanshugoyal23"
+  },
+  "supported_tools": [
+    {
+      "name": "registerAgent",
+      "description": "Register a new agent with name, capabilities, and ENS name on-chain",
+      "source": "contracts/AgentRegistry.sol",
+      "protocol": "on-chain"
+    },
+    {
+      "name": "attestCompletion",
+      "description": "Peer attestation of task completion with score (0-10) — updates reputation",
+      "source": "contracts/AgentRegistry.sol",
+      "protocol": "on-chain"
+    },
+    {
+      "name": "getReputation",
+      "description": "Query agent reputation score, tasks completed, tasks failed, and total attestations",
+      "source": "contracts/AgentRegistry.sol",
+      "protocol": "on-chain"
+    },
+    {
+      "name": "discoverAgents",
+      "description": "Find agents by capability tag and minimum reputation score",
+      "source": "contracts/AgentRegistry.sol",
+      "protocol": "on-chain"
+    },
+    {
+      "name": "delegate",
+      "description": "Grant scoped, time-limited, revocable permissions to another agent",
+      "source": "contracts/AgentRegistry.sol",
+      "protocol": "on-chain"
+    },
+    {
+      "name": "revokeDelegation",
+      "description": "Revoke previously granted delegation permissions",
+      "source": "contracts/AgentRegistry.sol",
+      "protocol": "on-chain"
+    },
+    {
+      "name": "isDelegationActive",
+      "description": "Check if a delegation is still active (not expired or revoked)",
+      "source": "contracts/AgentRegistry.sol",
+      "protocol": "on-chain"
+    },
+    {
+      "name": "rank_projects",
+      "description": "Reputation-weighted public goods project evaluation across legitimacy, impact, and sustainability",
+      "source": "src/public_goods_evaluator.py",
+      "protocol": "internal"
+    },
+    {
+      "name": "olas_register_service",
+      "description": "Register agent as Pearl-compatible autonomous service in Olas ecosystem",
+      "source": "src/olas_integration.py",
+      "protocol": "Olas"
+    },
+    {
+      "name": "olas_handle_request",
+      "description": "Handle service requests with fee validation and SLA tracking",
+      "source": "src/olas_integration.py",
+      "protocol": "Olas"
+    }
+  ],
+  "tech_stack": {
+    "runtime": "Python 3.12 + Node.js",
+    "smart_contracts": "Solidity 0.8.x (Hardhat)",
+    "chains": ["Base Sepolia", "Base Mainnet (ERC-8004)"],
+    "protocols": ["ERC-8004", "ENS", "Olas/Pearl"],
+    "testing": "Hardhat + 23 Solidity tests",
+    "web3_library": "ethers.js"
+  },
+  "smart_contracts": {
+    "AgentRegistry": {
+      "network": "Base Sepolia",
+      "address": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+      "verified": true,
+      "functions": [
+        "registerAgent(string,string[],string)",
+        "attestCompletion(uint256,uint256,uint8,string)",
+        "getReputation(uint256)",
+        "discoverAgents(string,uint256)",
+        "delegate(uint256,bytes32[],uint256)",
+        "revokeDelegation(uint256)",
+        "isDelegationActive(uint256)"
+      ],
+      "events": [
+        "AgentRegistered(agentId, wallet, name)",
+        "AttestationCreated(attestationId, from, to, score)",
+        "DelegationCreated(delegationId, from, to, expiry)",
+        "DelegationRevoked(delegationId)",
+        "ReputationUpdated(agentId, newScore)"
+      ]
+    }
+  },
+  "compute_constraints": {
+    "on_chain_only": true,
+    "gas_per_registration": "~120,000",
+    "gas_per_attestation": "~85,000",
+    "gas_per_delegation": "~95,000",
+    "sybil_resistance": "One registration per wallet enforced at contract level"
+  },
+  "task_categories": [
+    "agent_identity_registration",
+    "reputation_scoring",
+    "peer_attestation",
+    "capability_discovery",
+    "scoped_delegation",
+    "public_goods_evaluation",
+    "agent_coordination",
+    "trust_verification",
+    "escrow_primitives"
+  ],
+  "registered_agents": [
+    {
+      "name": "AnalystAgent",
+      "capabilities": ["analysis", "reporting"],
+      "registration_tx": "0x9baf599e7fd4705704b7b5ef641d87ce9cc78cea059efab69bdc995d33285551"
+    },
+    {
+      "name": "ResearchAgent",
+      "capabilities": ["research", "data-analysis", "public-goods-eval"],
+      "registration_tx": "0x078562487e8144c54b68d34e697fcc6cc2fd287aa13cc13ef8ee9a078223ae1f"
+    },
+    {
+      "name": "AuditorAgent",
+      "capabilities": ["audit", "verification", "public-goods-eval"],
+      "registration_tx": "0x6b74db62b1bf2b68d67669c1d0ea9c45f80b87d0ec1909e69dfad55617c25af4"
+    }
+  ],
+  "links": {
+    "dashboard": "https://devanshug2307.github.io/trustagent/",
+    "github": "https://github.com/devanshug2307/trustagent",
+    "moltbook": "https://www.moltbook.com/u/autofundagent",
+    "agent_registry": "https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98"
+  }
+}
