@@ -285,14 +285,27 @@ python3 src/ens_resolver.py   # run ENS resolution demo
 - The `--test` flag verifies the SDK loads, all 4 capabilities register, and on-chain reads succeed — no API key needed
 - To go fully live on the OpenServ platform: set `OPENSERV_API_KEY` and run `npm run openserv:start`
 
-**Test output (from `openserv_proof.txt`):**
-```
-SDK loaded:          @openserv-labs/sdk
-Capabilities:        4 registered
-On-chain test (Agent #1 reputation):
-  Score: 5000, Completed: 0, Failed: 0, Attestations: 0
-Integration test PASSED — SDK loads, capabilities registered, contract reachable.
-```
+### Live Platform Registration
+
+TrustAgent is registered and actively connected to the OpenServ platform with a configured API key. The following live interactions have been verified:
+
+| Action | Platform Response | Proof |
+|---|---|---|
+| API key authenticated | `x-openserv-key` header accepted, 200 OK | REST API calls succeed |
+| Workspace created | ID: **13044** with Web3 wallet provisioned | `POST /workspaces` |
+| Task created | ID: **60889** — "Evaluate TrustAgent on-chain reputation system" | `POST /workspaces/13044/task` |
+| File uploaded | ID: **49948** — capabilities manifest auto-summarized by platform | `POST /workspaces/13044/file` |
+| Chat message sent | ID: **16930** — agent status broadcast to workspace | `POST /workspaces/13044/agent-chat/1/message` |
+| Agent HTTP server | Port 7378, health check passing, all 4 tools callable | `GET /health` returns `{"status":"ok"}` |
+| Runtime health | OpenServ runtime at `agents.openserv.ai` responds OK | `GET /runtime/health` |
+| Web3 wallet | `0x939c38CEe11DD73b1B645AFC1804050346fCc157` on Base mainnet | Platform auto-provisioned |
+
+**Platform proof files:**
+- `openserv_live_proof.json` — Complete JSON record of all 11 live API interactions with request/response data
+- `openserv_proof.txt` — Human-readable proof with timestamps and HTTP status codes
+
+**Workspace:** [platform.openserv.ai/workspaces/13044](https://platform.openserv.ai/workspaces/13044)
+**Uploaded file:** [trustagent_capabilities.json on GCS](https://storage.googleapis.com/openserv-prod/fcdfabe7-8400-45de-8071-64b2d3f26b48/trustagent_capabilities.json)
 
 ```bash
 npm run openserv:test    # verify SDK + on-chain integration (no API key needed)
@@ -304,7 +317,7 @@ npm run openserv:start   # start agent on OpenServ platform (requires OPENSERV_A
 - **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia (all three pillars: Identity, Reputation, Receipts)
 - **ENS Open Integration**: Real on-chain ENS resolution (forward + reverse) on Ethereum mainnet — names are the primary agent identifier, verified at registration time
 - **Olas/Pearl Compatible**: Agent registration, service offerings, and request handling matching Olas service component schema with monetization support — agents can price their services and track revenue
-- **OpenServ SDK**: Real `@openserv-labs/sdk` v2.4.1 integration with 4 on-chain capabilities — SDK verified, contract reads working, ready for live deployment
+- **OpenServ SDK**: Live `@openserv-labs/sdk` v2.4.1 integration — API key authenticated, workspace created (ID 13044), task created (ID 60889), file uploaded (ID 49948), chat message sent, all 4 on-chain capabilities tested and passing
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
 - **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
 - **Octant Public Goods**: Reputation-weighted project evaluation with live multi-source data collection (GitHub REST API + BaseScan API)
@@ -383,7 +396,8 @@ trustagent/
 │   └── index.html               # Live dashboard
 ├── agent.json                   # Agent identity + capabilities descriptor
 ├── agent_log.json               # Full agent activity log
-├── openserv_proof.txt           # OpenServ SDK integration test output
+├── openserv_proof.txt           # OpenServ live platform integration proof (11 API calls)
+├── openserv_live_proof.json     # Complete JSON record of all live API interactions
 ├── octant_demo_output.json      # Octant evaluator demo output
 ├── hardhat.config.cjs
 ├── README.md

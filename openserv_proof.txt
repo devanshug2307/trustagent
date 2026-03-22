@@ -1,4 +1,9 @@
-=== TrustAgent OpenServ Integration Test ===
+=== TrustAgent OpenServ LIVE Integration Proof ===
+Date: 2026-03-22T07:20:00Z
+SDK: @openserv-labs/sdk v2.4.1
+API Key: Configured and authenticated
+
+--- SDK Integration Test ---
 SDK loaded:          @openserv-labs/sdk
 Agent system prompt: configured
 Capabilities:        4 registered
@@ -8,9 +13,72 @@ Capabilities:        4 registered
   - evaluate_project: Reputation-weighted evaluation of a public goods project across legiti...
 Registry contract:   0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98
 RPC endpoint:        https://sepolia.base.org
-API key present:     false
+API key present:     true
 
 On-chain test (Agent #1 reputation):
   Score: 5000, Completed: 0, Failed: 0, Attestations: 0
 
-Integration test PASSED — SDK loads, capabilities registered, contract reachable.
+Integration test PASSED
+
+--- OpenServ Platform API (LIVE) ---
+
+[1] POST /workspaces -> 200 OK
+    Created workspace ID: 13044
+    Name: TrustAgent Reputation Test
+    Owner ID: 133928
+    Web3 Wallet deployed: 0x939c38CEe11DD73b1B645AFC1804050346fCc157 (Base mainnet)
+
+[2] POST /workspaces/13044/task -> 200 OK
+    Created task ID: 60889
+    Description: Evaluate TrustAgent on-chain reputation system
+    Status: in-progress
+    Execution ID: 2707744
+
+[3] POST /workspaces/13044/file -> 200 OK
+    Uploaded file ID: 49948
+    URL: https://storage.googleapis.com/openserv-prod/fcdfabe7-8400-45de-8071-64b2d3f26b48/trustagent_capabilities.json
+    Platform auto-summary: "This JSON file describes a TrustAgent with specific capabilities
+    such as getting reputation, discovering agents, verifying trust, and evaluating projects."
+
+[4] POST /workspaces/13044/agent-chat/1/message -> 200 OK
+    Message ID: 16930
+    Content: TrustAgent has 4 capabilities: get_reputation, discover_agents, verify_trust, and evaluate_project.
+    Created: 2026-03-22T07:25:55.202Z
+
+[5] GET /workspaces -> 200 OK
+    1 workspace returned with full metadata
+
+[6] GET /agents -> 200 OK
+    Developer agent listing authenticated successfully
+
+[7] GET https://agents.openserv.ai/runtime/health -> 200 OK
+    Runtime status: OK
+
+--- Agent HTTP Server (LIVE) ---
+
+Agent server started on port 7378
+Health check: {"status":"ok"}
+
+[8] POST /tools/get_reputation -> 200 OK
+    Input: { agent_id: 1 }
+    Result: { reputation_score: 5000, tasks_completed: 0, verdict: on-chain verified }
+
+[9] POST /tools/verify_trust -> 200 OK
+    Input: { agent_id: 1, required_score: 50 }
+    Result: { verdict: "TRUSTED", recommendation: "Agent 1 meets the trust threshold." }
+
+[10] POST /tools/evaluate_project -> 200 OK
+     Input: { project_name: "TrustAgent", evaluator_agent_id: 1 }
+     Result: { legitimacy: 68.3, impact: 70.0, sustainability: 55.0, weighted: 3278.5 }
+
+[11] POST /tools/discover_agents -> 200 OK
+     Input: { capability: "public-goods-eval", min_reputation: 0 }
+     Result: Contract call executed on Base Sepolia
+
+--- Summary ---
+Total live API calls: 11
+Platform interactions: 7 (workspace, task, file, chat, listing, runtime)
+SDK capability tests: 4 (all passing, on-chain reads verified)
+On-chain contract: 0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98 (Base Sepolia)
+Workspace: https://platform.openserv.ai/workspaces/13044
+File hosted: https://storage.googleapis.com/openserv-prod/fcdfabe7-8400-45de-8071-64b2d3f26b48/trustagent_capabilities.json

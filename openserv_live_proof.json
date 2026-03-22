@@ -1,0 +1,206 @@
+{
+  "timestamp": "2026-03-22T07:27:35.673Z",
+  "agent": "TrustAgent",
+  "platform": "OpenServ",
+  "sdk_version": "2.4.1",
+  "api_key_authenticated": true,
+  "platform_api_responses": {
+    "workspace_created": {
+      "endpoint": "POST /workspaces",
+      "request": {
+        "goal": "Test TrustAgent reputation system",
+        "agents": []
+      },
+      "response": {
+        "id": 13044
+      },
+      "http_status": 200
+    },
+    "workspace_details": {
+      "endpoint": "GET /workspaces/13044",
+      "response": {
+        "id": 13044,
+        "name": "TrustAgent Reputation Test",
+        "goal": "Test TrustAgent reputation system",
+        "ownerId": 133928,
+        "status": "in-progress",
+        "web3Wallet": {
+          "agentId": "8453:25149",
+          "deployed": true,
+          "walletAddress": "0x68c3eBA9ae030aB710509BeD32d97b335Ed1b673",
+          "address": "0x939c38CEe11DD73b1B645AFC1804050346fCc157",
+          "network": "base",
+          "chainId": 8453,
+          "rpcUrl": "https://mainnet.base.org"
+        }
+      },
+      "http_status": 200
+    },
+    "task_created": {
+      "endpoint": "POST /workspaces/13044/task",
+      "request": {
+        "assignee": 1,
+        "description": "Evaluate TrustAgent on-chain reputation system",
+        "body": "Use the AgentRegistry contract at 0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98 on Base Sepolia to look up agent reputation scores.",
+        "input": "AgentRegistry address: 0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98, Chain: Base Sepolia",
+        "expectedOutput": "Agent reputation score and task completion data"
+      },
+      "response": {
+        "id": 60889
+      },
+      "http_status": 200
+    },
+    "task_details": {
+      "endpoint": "GET /workspaces/13044/tasks/60889",
+      "response": {
+        "id": 60889,
+        "description": "Evaluate TrustAgent on-chain reputation system",
+        "status": "in-progress",
+        "assigneeAgentId": 1,
+        "assigneeAgentName": "Project Manager",
+        "executions": [
+          {
+            "id": 2707744,
+            "status": "in-progress"
+          }
+        ]
+      },
+      "http_status": 200
+    },
+    "file_uploaded": {
+      "endpoint": "POST /workspaces/13044/file",
+      "request": {
+        "path": "trustagent_capabilities.json"
+      },
+      "response": {
+        "fileId": 49948,
+        "fullUrl": "https://storage.googleapis.com/openserv-prod/fcdfabe7-8400-45de-8071-64b2d3f26b48/trustagent_capabilities.json",
+        "summary": "This JSON file describes a TrustAgent with specific capabilities such as getting reputation, discovering agents, verifying trust, and evaluating projects."
+      },
+      "http_status": 200
+    },
+    "chat_message_sent": {
+      "endpoint": "POST /workspaces/13044/agent-chat/1/message",
+      "request": {
+        "content": "TrustAgent has 4 capabilities: get_reputation, discover_agents, verify_trust, and evaluate_project. Connected to AgentRegistry on Base Sepolia at 0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98.",
+        "role": "user"
+      },
+      "response": {
+        "id": 16930,
+        "role": "user",
+        "isCompleted": true,
+        "createdAt": "2026-03-22T07:25:55.202Z"
+      },
+      "http_status": 200
+    },
+    "runtime_health": {
+      "endpoint": "GET https://agents.openserv.ai/runtime/health",
+      "response": {
+        "status": "OK"
+      },
+      "http_status": 200
+    }
+  },
+  "sdk_integration": {
+    "agent_http_server": {
+      "port": 7378,
+      "health_check": {
+        "status": "ok"
+      },
+      "capabilities_registered": 4
+    },
+    "capabilities_tested": {
+      "get_reputation": {
+        "endpoint": "POST /tools/get_reputation",
+        "args": {
+          "agent_id": 1
+        },
+        "result": {
+          "agent_id": 1,
+          "reputation_score": 5000,
+          "tasks_completed": 0,
+          "tasks_failed": 0,
+          "total_attestations": 0,
+          "contract": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+          "chain": "Base Sepolia (84532)"
+        },
+        "http_status": 200
+      },
+      "verify_trust": {
+        "endpoint": "POST /tools/verify_trust",
+        "args": {
+          "agent_id": 1,
+          "required_score": 50
+        },
+        "result": {
+          "agent_id": 1,
+          "reputation_score": 5000,
+          "required_score": 50,
+          "verdict": "TRUSTED",
+          "recommendation": "Agent 1 meets the trust threshold. Safe to delegate."
+        },
+        "http_status": 200
+      },
+      "evaluate_project": {
+        "endpoint": "POST /tools/evaluate_project",
+        "args": {
+          "project_name": "TrustAgent",
+          "project_description": "AI-native trust and reputation layer for multi-agent systems with on-chain identity",
+          "evaluator_agent_id": 1
+        },
+        "result": {
+          "project": "TrustAgent",
+          "scores": {
+            "legitimacy": "68.3",
+            "impact": "70.0",
+            "sustainability": "55.0",
+            "weighted_composite": "3278.5"
+          },
+          "evaluator": {
+            "agent_id": 1,
+            "reputation_score": 5000,
+            "weight": "50.00"
+          }
+        },
+        "http_status": 200
+      },
+      "discover_agents": {
+        "endpoint": "POST /tools/discover_agents",
+        "args": {
+          "capability": "public-goods-eval",
+          "min_reputation": 0
+        },
+        "result": "Contract call executed (no agents with this capability registered yet)",
+        "http_status": 200
+      }
+    },
+    "tunnel_connection_attempted": {
+      "proxy_url": "wss://agents-proxy.openserv.ai/ws",
+      "authenticated": true,
+      "note": "Tunnel WebSocket connected and authenticated. The provided developer API key requires agent-level secret key for persistent tunnel connection. HTTP server mode works fully."
+    }
+  },
+  "onchain_integration": {
+    "contract": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+    "chain": "Base Sepolia",
+    "chainId": 84532,
+    "rpc": "https://sepolia.base.org",
+    "agent1_reputation": {
+      "score": 5000,
+      "tasks_completed": 0,
+      "tasks_failed": 0,
+      "attestations": 0
+    }
+  },
+  "verification": {
+    "api_key_works": true,
+    "workspace_created": true,
+    "task_created": true,
+    "file_uploaded": true,
+    "chat_message_sent": true,
+    "sdk_agent_runs": true,
+    "capabilities_work": true,
+    "onchain_reads_work": true,
+    "web3_wallet_provisioned": true
+  }
+}

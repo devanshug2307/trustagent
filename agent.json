@@ -74,15 +74,57 @@
       "description": "Handle service requests with fee validation and SLA tracking",
       "source": "src/olas_integration.py",
       "protocol": "Olas"
+    },
+    {
+      "name": "openserv_get_reputation",
+      "description": "Look up on-chain agent reputation via OpenServ multi-agent coordination",
+      "source": "src/openserv_agent.mjs",
+      "protocol": "OpenServ"
+    },
+    {
+      "name": "openserv_discover_agents",
+      "description": "Find agents by capability and minimum reputation via OpenServ",
+      "source": "src/openserv_agent.mjs",
+      "protocol": "OpenServ"
+    },
+    {
+      "name": "openserv_verify_trust",
+      "description": "Verify trust threshold before task delegation via OpenServ",
+      "source": "src/openserv_agent.mjs",
+      "protocol": "OpenServ"
+    },
+    {
+      "name": "openserv_evaluate_project",
+      "description": "Reputation-weighted public goods evaluation via OpenServ multi-agent workflow",
+      "source": "src/openserv_agent.mjs",
+      "protocol": "OpenServ"
     }
   ],
+  "openserv_integration": {
+    "sdk": "@openserv-labs/sdk",
+    "sdk_version": "2.4.1",
+    "agent_file": "src/openserv_agent.mjs",
+    "capabilities_registered": 4,
+    "multi_agent_features": [
+      "Task routing between agents in OpenServ workspaces",
+      "Chat-based agent-to-agent collaboration",
+      "File sharing across multi-agent workflows",
+      "Secrets management for cross-agent API keys",
+      "Automatic tunnel for local development"
+    ],
+    "test_command": "npm run openserv:test",
+    "start_command": "npm run openserv:start",
+    "platform_url": "https://platform.openserv.ai",
+    "proof_file": "openserv_proof.txt"
+  },
   "tech_stack": {
     "runtime": "Python 3.12 + Node.js",
     "smart_contracts": "Solidity 0.8.x (Hardhat)",
     "chains": ["Base Sepolia", "Base Mainnet (ERC-8004)"],
-    "protocols": ["ERC-8004", "ENS", "Olas/Pearl"],
+    "protocols": ["ERC-8004", "ENS", "Olas/Pearl", "OpenServ"],
     "testing": "Hardhat + 23 Solidity tests",
-    "web3_library": "ethers.js"
+    "web3_library": "ethers.js",
+    "openserv_sdk": "@openserv-labs/sdk v2.4.1"
   },
   "smart_contracts": {
     "AgentRegistry": {
