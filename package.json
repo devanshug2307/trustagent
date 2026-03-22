@@ -4,7 +4,9 @@
   "description": "> How does one agent know it can trust another? TrustAgent answers that question.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx hardhat --config hardhat.config.cjs test",
+    "openserv:test": "node src/openserv_agent.mjs --test",
+    "openserv:start": "node src/openserv_agent.mjs"
   },
   "repository": {
     "type": "git",
@@ -21,5 +23,8 @@
     "@nomicfoundation/hardhat-toolbox": "^6.1.2",
     "@openzeppelin/contracts": "^5.6.1",
     "hardhat": "^2.28.6"
+  },
+  "dependencies": {
+    "@openserv-labs/sdk": "^2.4.1"
   }
 }

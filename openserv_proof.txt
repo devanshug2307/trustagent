@@ -1,0 +1,16 @@
+=== TrustAgent OpenServ Integration Test ===
+SDK loaded:          @openserv-labs/sdk
+Agent system prompt: configured
+Capabilities:        4 registered
+  - get_reputation: Look up an agent's on-chain reputation score, tasks completed/failed, ...
+  - discover_agents: Find agents registered on-chain that match a given capability tag and ...
+  - verify_trust: Verify whether an agent meets a minimum trust threshold before delegat...
+  - evaluate_project: Reputation-weighted evaluation of a public goods project across legiti...
+Registry contract:   0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98
+RPC endpoint:        https://sepolia.base.org
+API key present:     false
+
+On-chain test (Agent #1 reputation):
+  Score: 5000, Completed: 0, Failed: 0, Attestations: 0
+
+Integration test PASSED — SDK loads, capabilities registered, contract reachable.

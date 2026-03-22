@@ -268,11 +268,43 @@ python3 src/ens_resolver.py   # run ENS resolution demo
 - **`agent.json`** — Machine-readable agent descriptor with name, version, capabilities, supported tools, tech stack, smart contract addresses, and links. Enables programmatic agent discovery and interoperability.
 - **`agent_log.json`** — Complete activity log recording all agent operations, onchain transactions, and evaluation results.
 
+## OpenServ SDK Integration (OpenServ Track)
+
+`src/openserv_agent.mjs` registers TrustAgent as a full OpenServ-compatible agent using the `@openserv-labs/sdk` (v2.4.1). The agent exposes 4 capabilities that read directly from the on-chain AgentRegistry contract on Base Sepolia:
+
+| Capability | Description |
+|---|---|
+| `get_reputation` | Look up an agent's on-chain reputation score, tasks completed/failed, and attestation count |
+| `discover_agents` | Find registered agents matching a capability tag and minimum reputation threshold |
+| `verify_trust` | Verify whether an agent meets a trust threshold before delegating — returns TRUSTED / INSUFFICIENT_TRUST verdict |
+| `evaluate_project` | Reputation-weighted public goods evaluation across legitimacy, impact, and sustainability |
+
+**How it works:**
+- Uses the OpenServ SDK `Agent` class with Zod-validated input schemas for each capability
+- Every capability calls the live AgentRegistry contract (`0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98`) via ethers.js
+- The `--test` flag verifies the SDK loads, all 4 capabilities register, and on-chain reads succeed — no API key needed
+- To go fully live on the OpenServ platform: set `OPENSERV_API_KEY` and run `npm run openserv:start`
+
+**Test output (from `openserv_proof.txt`):**
+```
+SDK loaded:          @openserv-labs/sdk
+Capabilities:        4 registered
+On-chain test (Agent #1 reputation):
+  Score: 5000, Completed: 0, Failed: 0, Attestations: 0
+Integration test PASSED — SDK loads, capabilities registered, contract reachable.
+```
+
+```bash
+npm run openserv:test    # verify SDK + on-chain integration (no API key needed)
+npm run openserv:start   # start agent on OpenServ platform (requires OPENSERV_API_KEY)
+```
+
 ## Integrations
 
 - **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia (all three pillars: Identity, Reputation, Receipts)
 - **ENS Open Integration**: Real on-chain ENS resolution (forward + reverse) on Ethereum mainnet — names are the primary agent identifier, verified at registration time
 - **Olas/Pearl Compatible**: Agent registration, service offerings, and request handling matching Olas service component schema with monetization support — agents can price their services and track revenue
+- **OpenServ SDK**: Real `@openserv-labs/sdk` v2.4.1 integration with 4 on-chain capabilities — SDK verified, contract reads working, ready for live deployment
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
 - **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
 - **Octant Public Goods**: Reputation-weighted project evaluation with live multi-source data collection (GitHub REST API + BaseScan API)
@@ -341,15 +373,17 @@ trustagent/
 │   ├── multi-agent-demo.cjs     # Multi-agent onchain demo (6 TXs)
 │   └── onchain-demo.cjs         # Single agent demo
 ├── src/
-│   ├── public_goods_evaluator.py  # Octant: reputation-weighted evaluation + data collection
-│   ├── olas_integration.py        # Olas: Pearl-compatible agent services + monetization
-│   └── ens_resolver.py            # ENS: real mainnet name resolution + agent identity verification
+│   ├── openserv_agent.mjs          # OpenServ: SDK agent with 4 on-chain capabilities
+│   ├── public_goods_evaluator.py   # Octant: reputation-weighted evaluation + data collection
+│   ├── olas_integration.py         # Olas: Pearl-compatible agent services + monetization
+│   └── ens_resolver.py             # ENS: real mainnet name resolution + agent identity verification
 ├── test/
 │   └── AgentRegistry.test.cjs   # 23 tests
 ├── docs/
 │   └── index.html               # Live dashboard
 ├── agent.json                   # Agent identity + capabilities descriptor
 ├── agent_log.json               # Full agent activity log
+├── openserv_proof.txt           # OpenServ SDK integration test output
 ├── octant_demo_output.json      # Octant evaluator demo output
 ├── hardhat.config.cjs
 ├── README.md
