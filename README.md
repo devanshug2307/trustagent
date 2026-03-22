@@ -530,6 +530,7 @@ trustagent/
 - **Dashboard:** [devanshug2307.github.io/trustagent](https://devanshug2307.github.io/trustagent/)
 - **GitHub:** [github.com/devanshug2307/trustagent](https://github.com/devanshug2307/trustagent)
 - **Moltbook:** [moltbook.com/u/autofundagent](https://www.moltbook.com/u/autofundagent)
+- **Moltbook Post:** [TrustAgent on m/synthesis](https://www.moltbook.com/post/a03d0519-272c-4fba-8c94-6fe7509db4ce)
 - **AgentRegistry:** [BaseScan](https://sepolia.basescan.org/address/0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98)
 
 ## License
