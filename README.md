@@ -6,6 +6,10 @@
 
 **Live Dashboard:** [devanshug2307.github.io/trustagent](https://devanshug2307.github.io/trustagent/)
 
+![TrustAgent Dashboard — Registry, ERC-8004 Pillars, Registered Agents](dashboard_screenshot_1.png)
+
+![TrustAgent Dashboard — Olas Mech, OpenServ, Alkahest, ENS, Octant](dashboard_screenshot_2.png)
+
 ---
 
 ## Problem
