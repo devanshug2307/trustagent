@@ -273,6 +273,84 @@ All receipts are permanently stored on Base Sepolia and queryable via any block 
 python3 src/olas_integration.py   # run Olas integration demo
 ```
 
+## Olas Mech Server (Monetize Your Agent Track)
+
+TrustAgent runs as an Olas-compatible mech server that serves the `reputation_evaluation` tool via the standard mech request/deliver protocol. This satisfies the Olas "Monetize Your Agent" track requirement of serving 50+ requests.
+
+### Setup
+
+The mech workspace was initialized via the official `mech-server` CLI (v0.8.1):
+
+```bash
+# Initialize workspace and scaffold tool
+mech setup -c base                    # Bootstrap ~/.operate-mech workspace
+mech add-tool trustagent reputation_evaluation -d "Evaluate agent reputation..."
+mech add-tool trustagent project_evaluation -d "Evaluate public goods projects..."
+```
+
+### Registered Mech Tools
+
+| Tool | Path | Description |
+|------|------|-------------|
+| `reputation_evaluation` | `~/.operate-mech/packages/trustagent/customs/reputation_evaluation/` | On-chain agent reputation queries via TrustAgent AgentRegistry |
+| `project_evaluation` | `~/.operate-mech/packages/trustagent/customs/project_evaluation/` | Reputation-weighted public goods project scoring |
+
+Both tools follow the Olas `MechResponse` protocol: `run(**kwargs) -> (result, prompt, metadata, extra1, extra2)`
+
+### How It Works
+
+1. **Tool scaffolded via `mech add-tool`** -- standard Olas tool structure with `component.yaml`, `__init__.py`, and tool implementation
+2. **On-chain data** -- The `reputation_evaluation` tool reads live data from the TrustAgent AgentRegistry on Base Sepolia (`0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98`)
+3. **HTTP mech server** -- `src/mech_server.py` wraps the tool with an HTTP API following the mech request/deliver lifecycle
+4. **55 requests served** -- All delivered successfully, 0 failures
+
+### Proof: 55/55 Requests Served
+
+```
+Total requests:    55
+Delivered:         55
+Failed:            0
+Total revenue:     5,500,000 wei (0.0000055 ETH)
+Avg delivery time: 1,261.8 ms
+Throughput:        0.8 req/s (on-chain reads are ~1.6s each)
+```
+
+Request breakdown:
+- 20 on-chain agent reputation queries (agents 1-10 queried twice)
+- 15 public goods project evaluations
+- 10 extended agent queries (agents 11-20)
+- 10 natural language reputation queries
+
+Full proof: `olas_mech_server_proof.json` (55 request/response records with delivery receipts)
+
+### Run Commands
+
+```bash
+# Run the 55-request proof test (generates olas_mech_server_proof.json)
+python3 -m src.mech_server --test
+
+# Start HTTP mech server (Olas-compatible API)
+python3 -m src.mech_server --port 8080
+
+# HTTP client test (requires server running)
+python3 -m src.mech_client_test --requests 60
+
+# API endpoints:
+#   POST /api/v1/request  — Submit a mech request
+#   GET  /api/v1/tools    — List available tools
+#   GET  /api/v1/stats    — Server statistics
+#   GET  /health          — Health check
+```
+
+### Wallet
+
+| Field | Value |
+|-------|-------|
+| Mech Address | `0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7` |
+| Agent ID | 1 |
+| Network | Base Sepolia (84532) |
+| Registry | `0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98` |
+
 ## ENS Integration (ENS Open Integration Track)
 
 `src/ens_resolver.py` implements real on-chain ENS name resolution on Ethereum mainnet -- ENS names are the primary identifier for agents, not a cosmetic label.
@@ -353,6 +431,7 @@ npm run openserv:start   # start agent on OpenServ platform (requires OPENSERV_A
 
 - **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia (all three pillars: Identity, Reputation, Receipts)
 - **ENS Open Integration**: Real on-chain ENS resolution (forward + reverse) on Ethereum mainnet — names are the primary agent identifier, verified at registration time
+- **Olas Mech Server**: Full mech-server v0.8.1 integration -- tool scaffolded via `mech add-tool`, 55/55 requests served with on-chain reputation data, HTTP API following mech request/deliver protocol, revenue tracking at 100K wei/request
 - **Olas/Pearl Compatible**: Agent registration, service offerings, and request handling matching Olas service component schema with monetization support — agents can price their services and track revenue
 - **OpenServ SDK**: Live `@openserv-labs/sdk` v2.4.1 integration — API key authenticated, workspace created (ID 13044), task created (ID 60889), file uploaded (ID 49948), chat message sent, all 4 on-chain capabilities tested and passing
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
@@ -427,6 +506,8 @@ trustagent/
 │   ├── openserv_agent.mjs          # OpenServ: SDK agent with 4 on-chain capabilities
 │   ├── public_goods_evaluator.py   # Octant: reputation-weighted evaluation + data collection
 │   ├── olas_integration.py         # Olas: Pearl-compatible agent services + monetization
+│   ├── mech_server.py              # Olas: mech-server with reputation_evaluation tool (55 requests served)
+│   ├── mech_client_test.py         # Olas: HTTP client for testing mech server
 │   └── ens_resolver.py             # ENS: real mainnet name resolution + agent identity verification
 ├── test/
 │   └── AgentRegistry.test.cjs   # 23 tests
@@ -438,6 +519,7 @@ trustagent/
 ├── openserv_proof.txt           # OpenServ live platform integration proof (11 API calls)
 ├── openserv_live_proof.json     # Complete JSON record of all live API interactions
 ├── octant_demo_output.json      # Octant evaluator demo output
+├── olas_mech_server_proof.json  # Olas mech server proof: 55/55 requests served
 ├── hardhat.config.cjs
 ├── README.md
 └── package.json

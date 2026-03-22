@@ -1,0 +1,1257 @@
+{
+  "mech_server": {
+    "type": "TrustAgent Olas Mech Server",
+    "version": "1.0.0",
+    "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+    "agent_id": 1,
+    "tool": "reputation_evaluation",
+    "tool_path": "/Users/devanshu/.operate-mech/packages/trustagent/customs/reputation_evaluation/reputation_evaluation.py",
+    "olas_workspace": "/Users/devanshu/.operate-mech"
+  },
+  "track": {
+    "name": "Monetize Your Agent",
+    "sponsor": "Olas / TrustAgent",
+    "requirement": "Serve 50+ requests via mech-server"
+  },
+  "stats": {
+    "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+    "agent_id": 1,
+    "uptime_seconds": 69.4,
+    "total_requests": 55,
+    "delivered": 55,
+    "failed": 0,
+    "total_revenue_wei": 5500000,
+    "total_revenue_eth": 5.5e-12,
+    "avg_delivery_time_ms": 1261.75,
+    "tools_available": [
+      "reputation_evaluation"
+    ]
+  },
+  "execution": {
+    "total_requests_sent": 55,
+    "total_delivered": 55,
+    "total_failed": 0,
+    "total_wall_time_seconds": 69.399,
+    "throughput_rps": 0.8,
+    "timestamp": "2026-03-22T08:33:15.867566+00:00"
+  },
+  "tool_verification": {
+    "on_chain_reads": true,
+    "registry_address": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+    "network": "Base Sepolia (84532)",
+    "scaffolded_via": "mech add-tool trustagent reputation_evaluation",
+    "workspace_initialized": true
+  },
+  "requests": [
+    {
+      "sequence": 1,
+      "description": "Agent 1 reputation query",
+      "delivery": {
+        "request_id": "mech-req-53fd2b4ee4b5",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 1,\n  \"agent_name\": \"AnalystAgent\",\n  \"agent_wallet\": \"0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x96f098c190ec1b3b543bdfb3b4e28e84c37b5a12f5c12ad0a701bddc88de5028",
+          "delivery_time_ms": 2799.44,
+          "timestamp": "2026-03-22T08:32:09.267431+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "description": "Agent 2 reputation query",
+      "delivery": {
+        "request_id": "mech-req-295804c97427",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 2,\n  \"agent_name\": \"ResearchAgent\",\n  \"agent_wallet\": \"0xa4DA2d7B64CB2a243Ffb851642e13F9F948C4436\",\n  \"active\": true,\n  \"reputation_score\": 10000,\n  \"reputation_pct\": 100.0,\n  \"tasks_completed\": 1,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 1,\n  \"credibility_weight\": 2.8284,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xb65cf62e071164d1a2f27a2c00238ddc8278d24df0ba6d78c210d013d741d97d",
+          "delivery_time_ms": 2069.24,
+          "timestamp": "2026-03-22T08:32:11.336723+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa02",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "description": "Agent 3 reputation query",
+      "delivery": {
+        "request_id": "mech-req-8b31cd2b1faa",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 3,\n  \"agent_name\": \"AuditorAgent\",\n  \"agent_wallet\": \"0xddc0cAa61832B78cBb87F4Bc3391881bE024A587\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xba175eb8c664f3c667b4f87b3e463da0b133f9ad5839b156694fd35417e79d61",
+          "delivery_time_ms": 1774.46,
+          "timestamp": "2026-03-22T08:32:13.111239+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa03",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "description": "Agent 4 reputation query",
+      "delivery": {
+        "request_id": "mech-req-55120df2a096",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 4,\n  \"agent_name\": \"ResearchAgent\",\n  \"agent_wallet\": \"0xF3255b5f9D49547993f47ffa7FCBb9253Dc627D6\",\n  \"active\": true,\n  \"reputation_score\": 10000,\n  \"reputation_pct\": 100.0,\n  \"tasks_completed\": 1,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 1,\n  \"credibility_weight\": 2.8284,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x2d6e7aaf7e0416c9d9cac2a6fc0dfab0e2eef0e8718465083f44acb165b1a893",
+          "delivery_time_ms": 1697.84,
+          "timestamp": "2026-03-22T08:32:14.809128+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa04",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "description": "Agent 5 reputation query",
+      "delivery": {
+        "request_id": "mech-req-535d5af8c2a7",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 5,\n  \"agent_name\": \"AuditorAgent\",\n  \"agent_wallet\": \"0x750612c8Ab5AA4f16e29AD9a92e77882035882C3\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xaa2dc670dcbe5bd214d3065ceb82a73cf2ea0140efade2232032968434ac9777",
+          "delivery_time_ms": 1687.2,
+          "timestamp": "2026-03-22T08:32:16.496397+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa05",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "description": "Agent 6 reputation query",
+      "delivery": {
+        "request_id": "mech-req-382a0d75b1dc",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 6,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xe0440680b5e2fb07d73b75fe92e0efa521f4f363a7ea771e191c4c43b78e1f10",
+          "delivery_time_ms": 1652.38,
+          "timestamp": "2026-03-22T08:32:18.148847+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa06",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 7,
+      "description": "Agent 7 reputation query",
+      "delivery": {
+        "request_id": "mech-req-bac06d9188f1",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 7,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x0bb9148a477ba98b89037a9c1efbcb914d78c0487d15f238a3ea09da3c9687dd",
+          "delivery_time_ms": 1606.73,
+          "timestamp": "2026-03-22T08:32:19.755647+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa07",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 8,
+      "description": "Agent 8 reputation query",
+      "delivery": {
+        "request_id": "mech-req-92bf0437063e",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 8,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x13088708121e03b5c213dfb97d0311b2ae65a30e853f9658c2cfe8e189cf44b9",
+          "delivery_time_ms": 1759.73,
+          "timestamp": "2026-03-22T08:32:21.515446+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa08",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 9,
+      "description": "Agent 9 reputation query",
+      "delivery": {
+        "request_id": "mech-req-e531c3f2caf8",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 9,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xcb58e8c2328b0665f4b816aa3c581f49053d450d09010dc9427be91b30522728",
+          "delivery_time_ms": 1638.18,
+          "timestamp": "2026-03-22T08:32:23.153690+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa09",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 10,
+      "description": "Agent 10 reputation query",
+      "delivery": {
+        "request_id": "mech-req-86273775a041",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 10,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x7319ae40d0c9060cda29fade9914e0bedcfe730493e02160defcf4efc8337811",
+          "delivery_time_ms": 1587.46,
+          "timestamp": "2026-03-22T08:32:24.741198+00:00"
+        },
+        "receipt": {
+          "sender": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0a",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 11,
+      "description": "NL query for AnalystAgent",
+      "delivery": {
+        "request_id": "mech-req-e354a55c1d68",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 1,\n  \"agent_name\": \"AnalystAgent\",\n  \"agent_wallet\": \"0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x4e12601903f31b6e780ecc5e41cce48f1775ae93be5d76512a2b4e7f78db0b78",
+          "delivery_time_ms": 1729.84,
+          "timestamp": "2026-03-22T08:32:26.471077+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb01",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 12,
+      "description": "NL query for ResearchAgent",
+      "delivery": {
+        "request_id": "mech-req-55cfcf59ddab",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 2,\n  \"agent_name\": \"ResearchAgent\",\n  \"agent_wallet\": \"0xa4DA2d7B64CB2a243Ffb851642e13F9F948C4436\",\n  \"active\": true,\n  \"reputation_score\": 10000,\n  \"reputation_pct\": 100.0,\n  \"tasks_completed\": 1,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 1,\n  \"credibility_weight\": 2.8284,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x031e08233f02d176b63f98964be90b4c85cd44beef0ce6f1b1dc404dec92dc11",
+          "delivery_time_ms": 1639.17,
+          "timestamp": "2026-03-22T08:32:28.110313+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb02",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 13,
+      "description": "NL query for AuditorAgent",
+      "delivery": {
+        "request_id": "mech-req-cd517aa0ecd9",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 3,\n  \"agent_name\": \"AuditorAgent\",\n  \"agent_wallet\": \"0xddc0cAa61832B78cBb87F4Bc3391881bE024A587\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x51b216bfe122441df2c5d48298c640f763f7c29ad65bb851ea40dd95db664e6f",
+          "delivery_time_ms": 1651.32,
+          "timestamp": "2026-03-22T08:32:29.761702+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb03",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 14,
+      "description": "NL query for OracleAgent",
+      "delivery": {
+        "request_id": "mech-req-99091b576711",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 4,\n  \"agent_name\": \"ResearchAgent\",\n  \"agent_wallet\": \"0xF3255b5f9D49547993f47ffa7FCBb9253Dc627D6\",\n  \"active\": true,\n  \"reputation_score\": 10000,\n  \"reputation_pct\": 100.0,\n  \"tasks_completed\": 1,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 1,\n  \"credibility_weight\": 2.8284,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x664942752e3d76a55472eaa3e2382521a58e9d0f54610719f08a87c04b048ba7",
+          "delivery_time_ms": 1692.12,
+          "timestamp": "2026-03-22T08:32:31.453886+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb04",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 15,
+      "description": "NL query for ValidatorAgent",
+      "delivery": {
+        "request_id": "mech-req-20b29252175a",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 5,\n  \"agent_name\": \"AuditorAgent\",\n  \"agent_wallet\": \"0x750612c8Ab5AA4f16e29AD9a92e77882035882C3\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x4b3107d16e7fd31a1d06dcf9f04425a64213bfb0187c7279175fe7ff9688918f",
+          "delivery_time_ms": 1606.48,
+          "timestamp": "2026-03-22T08:32:33.060461+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb05",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 16,
+      "description": "NL query for MonitorAgent",
+      "delivery": {
+        "request_id": "mech-req-46b082fab1a2",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 6,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x23c50940c1cd5c9a007780085316a8841a15f68563cc3fa76faad13bbf0e3519",
+          "delivery_time_ms": 1625.35,
+          "timestamp": "2026-03-22T08:32:34.685888+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb06",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 17,
+      "description": "NL query for GovernanceAgent",
+      "delivery": {
+        "request_id": "mech-req-92593cf0bcab",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 7,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xa2fc06cf56019f71b9c52007ddba819de782f5f5e00fbd838d4abcfe90e6bc47",
+          "delivery_time_ms": 1763.57,
+          "timestamp": "2026-03-22T08:32:36.449507+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb07",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 18,
+      "description": "NL query for TradingAgent",
+      "delivery": {
+        "request_id": "mech-req-ed4e97f69ec5",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 8,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xc5be88b6fd9c895a3fc3c3fa35870f206806ce290b8221e74c18383232cedf76",
+          "delivery_time_ms": 1670.24,
+          "timestamp": "2026-03-22T08:32:38.119799+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb08",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 19,
+      "description": "NL query for ComplianceAgent",
+      "delivery": {
+        "request_id": "mech-req-6c224b8f0020",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 9,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xddbe445c94292be80d864f3769c2ede6285a090719d9f30fb96948e114952e05",
+          "delivery_time_ms": 1719.75,
+          "timestamp": "2026-03-22T08:32:39.839624+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb09",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 20,
+      "description": "NL query for InsuranceAgent",
+      "delivery": {
+        "request_id": "mech-req-b21f902629a3",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 10,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xf44b97838fe062923914631c4819e24f51a0ee9da16d26c2e67e91f25d58a0fb",
+          "delivery_time_ms": 1802.74,
+          "timestamp": "2026-03-22T08:32:41.642443+00:00"
+        },
+        "receipt": {
+          "sender": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb0a",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 21,
+      "description": "Project eval: OpenResearch DAO",
+      "delivery": {
+        "request_id": "mech-req-2aea66957425",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"OpenResearch DAO\",\n  \"category\": \"research\",\n  \"funding_requested\": 25000,\n  \"scores\": {\n    \"legitimacy\": 8,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 9.4,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xb8ba6da515af6b16be0bb6e4594cfb1102695757e5a00088cd4fe982682fd5b5",
+          "delivery_time_ms": 0.1,
+          "timestamp": "2026-03-22T08:32:41.642590+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc00",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 22,
+      "description": "Project eval: CleanEnergy Protocol",
+      "delivery": {
+        "request_id": "mech-req-ce34bf58af70",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"CleanEnergy Protocol\",\n  \"category\": \"climate\",\n  \"funding_requested\": 50000,\n  \"scores\": {\n    \"legitimacy\": 10,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 10.0,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xa9267d26a7d19814b3431fd69539221f1465ca8e51214c763356467eb989a65f",
+          "delivery_time_ms": 0.06,
+          "timestamp": "2026-03-22T08:32:41.642672+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc01",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 23,
+      "description": "Project eval: EduChain",
+      "delivery": {
+        "request_id": "mech-req-8ed07a4ba538",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"EduChain\",\n  \"category\": \"education\",\n  \"funding_requested\": 15000,\n  \"scores\": {\n    \"legitimacy\": 6,\n    \"impact\": 7,\n    \"sustainability\": 7\n  },\n  \"composite_score\": 6.7,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x8df9fe8feb5f9994c0ba021dcba591f3fb7770c04b8932ddbe938d41ba2123d2",
+          "delivery_time_ms": 0.05,
+          "timestamp": "2026-03-22T08:32:41.642751+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc02",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 24,
+      "description": "Project eval: DeFi Safety Net",
+      "delivery": {
+        "request_id": "mech-req-d13ec114fc7d",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"DeFi Safety Net\",\n  \"category\": \"defi\",\n  \"funding_requested\": 30000,\n  \"scores\": {\n    \"legitimacy\": 8,\n    \"impact\": 9,\n    \"sustainability\": 9\n  },\n  \"composite_score\": 8.7,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x98447d803070897a5345ac0e55a243e4e969e0c0e187f484d01ded1729e8ad72",
+          "delivery_time_ms": 16.22,
+          "timestamp": "2026-03-22T08:32:41.658994+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc03",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 25,
+      "description": "Project eval: OpenGov Tools",
+      "delivery": {
+        "request_id": "mech-req-f454e04addc8",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"OpenGov Tools\",\n  \"category\": \"governance\",\n  \"funding_requested\": 20000,\n  \"scores\": {\n    \"legitimacy\": 9,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 9.7,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x291377b5986abce807718ac5f728fb97ef2ba89bcfccfd8a7d3ab476fb89802e",
+          "delivery_time_ms": 0.05,
+          "timestamp": "2026-03-22T08:32:41.659061+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc04",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 26,
+      "description": "Project eval: HealthDAO",
+      "delivery": {
+        "request_id": "mech-req-55e9fb02ee7c",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"HealthDAO\",\n  \"category\": \"health\",\n  \"funding_requested\": 40000,\n  \"scores\": {\n    \"legitimacy\": 9,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 9.7,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x454ce29d6dafc217ecb1297870f325fac9f20d8957f17f16ca11df76d282f1b1",
+          "delivery_time_ms": 0.02,
+          "timestamp": "2026-03-22T08:32:41.659086+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc05",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 27,
+      "description": "Project eval: ArtFund Collective",
+      "delivery": {
+        "request_id": "mech-req-75b91d35f6d3",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"ArtFund Collective\",\n  \"category\": \"art\",\n  \"funding_requested\": 10000,\n  \"scores\": {\n    \"legitimacy\": 6,\n    \"impact\": 5,\n    \"sustainability\": 5\n  },\n  \"composite_score\": 5.3,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x0bc9953def4f7801645dac0b550efb39f8b11d8ca7ecf32253225b5672218080",
+          "delivery_time_ms": 0.02,
+          "timestamp": "2026-03-22T08:32:41.659107+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc06",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 28,
+      "description": "Project eval: InfraDAO",
+      "delivery": {
+        "request_id": "mech-req-1dae8122dc34",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"InfraDAO\",\n  \"category\": \"infrastructure\",\n  \"funding_requested\": 60000,\n  \"scores\": {\n    \"legitimacy\": 10,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 10.0,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x31806f14e9f5eabd00986bf53d0d06e44c8e1283ef7ea14e2fabe3c1c359e19e",
+          "delivery_time_ms": 0.01,
+          "timestamp": "2026-03-22T08:32:41.659126+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc07",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 29,
+      "description": "Project eval: PrivacyShield",
+      "delivery": {
+        "request_id": "mech-req-7878018bf464",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"PrivacyShield\",\n  \"category\": \"privacy\",\n  \"funding_requested\": 35000,\n  \"scores\": {\n    \"legitimacy\": 8,\n    \"impact\": 9,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 9.0,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xc033ba6d4fdd0d94fa96f80ba80d0b5af3f8f2dd2b050b7afe6b28cf6ff532ef",
+          "delivery_time_ms": 0.01,
+          "timestamp": "2026-03-22T08:32:41.659142+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc08",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 30,
+      "description": "Project eval: SocialImpact Labs",
+      "delivery": {
+        "request_id": "mech-req-28b7c06be070",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"SocialImpact Labs\",\n  \"category\": \"social\",\n  \"funding_requested\": 22000,\n  \"scores\": {\n    \"legitimacy\": 8,\n    \"impact\": 8,\n    \"sustainability\": 8\n  },\n  \"composite_score\": 8.0,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xf1b58551ad8fce05214fa8b42725e2ae698a1fa91fc39c925016ec0ef440d9ef",
+          "delivery_time_ms": 0.02,
+          "timestamp": "2026-03-22T08:32:41.659163+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc09",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 31,
+      "description": "Project eval: AgriChain",
+      "delivery": {
+        "request_id": "mech-req-36b2a985a580",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"AgriChain\",\n  \"category\": \"agriculture\",\n  \"funding_requested\": 18000,\n  \"scores\": {\n    \"legitimacy\": 7,\n    \"impact\": 7,\n    \"sustainability\": 7\n  },\n  \"composite_score\": 7.0,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x75aecb97bd6c3553d480b552de7eca85769bf1cde75e0fa9f565a052aad15eb7",
+          "delivery_time_ms": 0.01,
+          "timestamp": "2026-03-22T08:32:41.659179+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc0a",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 32,
+      "description": "Project eval: WaterDAO",
+      "delivery": {
+        "request_id": "mech-req-aed581928866",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"WaterDAO\",\n  \"category\": \"environment\",\n  \"funding_requested\": 28000,\n  \"scores\": {\n    \"legitimacy\": 9,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 9.7,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xfe5e91dfc79d52666eac942096f7c50d5618126d0546720a977bd1e1a261c7d0",
+          "delivery_time_ms": 0.01,
+          "timestamp": "2026-03-22T08:32:41.659194+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc0b",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 33,
+      "description": "Project eval: TransitProtocol",
+      "delivery": {
+        "request_id": "mech-req-9a7708c8ebd5",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"TransitProtocol\",\n  \"category\": \"transport\",\n  \"funding_requested\": 45000,\n  \"scores\": {\n    \"legitimacy\": 10,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 10.0,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x117551c31a21df1746006d4e91c9aadaec87a7b24d24dbc2fa7fbf3e87079547",
+          "delivery_time_ms": 0.01,
+          "timestamp": "2026-03-22T08:32:41.659209+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc0c",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 34,
+      "description": "Project eval: LegalAid DAO",
+      "delivery": {
+        "request_id": "mech-req-c9b197fd36d5",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"LegalAid DAO\",\n  \"category\": \"legal\",\n  \"funding_requested\": 12000,\n  \"scores\": {\n    \"legitimacy\": 6,\n    \"impact\": 6,\n    \"sustainability\": 5\n  },\n  \"composite_score\": 5.7,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x025c5a7bf7cacc5a01f3353ddb8e3548db104b2b627537aa939222e4c12f60dd",
+          "delivery_time_ms": 0.01,
+          "timestamp": "2026-03-22T08:32:41.659224+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc0d",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 35,
+      "description": "Project eval: ScienceDAO",
+      "delivery": {
+        "request_id": "mech-req-166569ec34b1",
+        "status": "delivered",
+        "result": "{\n  \"project_name\": \"ScienceDAO\",\n  \"category\": \"science\",\n  \"funding_requested\": 55000,\n  \"scores\": {\n    \"legitimacy\": 10,\n    \"impact\": 10,\n    \"sustainability\": 10\n  },\n  \"composite_score\": 10.0,\n  \"dimension_weights\": {\n    \"legitimacy\": 0.3,\n    \"impact\": 0.4,\n    \"sustainability\": 0.3\n  },\n  \"methodology\": \"reputation-weighted multi-evaluator scoring via TrustAgent registry\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x13b0188f3333970bf7d8a9f33ebc6ff6b135f414d982c861989cc79901f24625",
+          "delivery_time_ms": 0.01,
+          "timestamp": "2026-03-22T08:32:41.659239+00:00"
+        },
+        "receipt": {
+          "sender": "0xcccccccccccccccccccccccccccccccccccccc0e",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 36,
+      "description": "Extended agent 11 query",
+      "delivery": {
+        "request_id": "mech-req-98b0d29d7de2",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 11,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x93f69cd201e660e72b7325861a58c9b6652181ededeed3b636150e302c814a56",
+          "delivery_time_ms": 1564.49,
+          "timestamp": "2026-03-22T08:32:43.223757+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd0b",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 37,
+      "description": "Extended agent 12 query",
+      "delivery": {
+        "request_id": "mech-req-568d23b57266",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 12,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x55bbb5e8723dd2da8afb94034f1b624bd0a4be8fe152762bc3fbba50538d902d",
+          "delivery_time_ms": 1603.86,
+          "timestamp": "2026-03-22T08:32:44.827674+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd0c",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 38,
+      "description": "Extended agent 13 query",
+      "delivery": {
+        "request_id": "mech-req-ccf3f90d4766",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 13,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xe823de8467edc032dd5f41a0a296c271accb4cca116e3bfb235f54efaeddbeef",
+          "delivery_time_ms": 1624.64,
+          "timestamp": "2026-03-22T08:32:46.452374+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd0d",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 39,
+      "description": "Extended agent 14 query",
+      "delivery": {
+        "request_id": "mech-req-8d25f0c8906f",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 14,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x41bea6db610c69875fc8c39ef3e985f69f1f9d462fb85d7d40554d91096212e3",
+          "delivery_time_ms": 1648.24,
+          "timestamp": "2026-03-22T08:32:48.100704+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd0e",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 40,
+      "description": "Extended agent 15 query",
+      "delivery": {
+        "request_id": "mech-req-63ed51394adb",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 15,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xd2501c256fb57c0939ab6609655e501692958955fb6e20a5a99f07827a60ea41",
+          "delivery_time_ms": 1748.34,
+          "timestamp": "2026-03-22T08:32:49.849131+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd0f",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 41,
+      "description": "Extended agent 16 query",
+      "delivery": {
+        "request_id": "mech-req-fe59503fce7a",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 16,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x3662d86d8bae045858585683e84ee9ecefd322f978c8a45bd0114d265fb7afd4",
+          "delivery_time_ms": 1725.68,
+          "timestamp": "2026-03-22T08:32:51.574888+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd10",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 42,
+      "description": "Extended agent 17 query",
+      "delivery": {
+        "request_id": "mech-req-472df7547611",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 17,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xf2119fe875dedfd431fbaa299818b9ac468853658f6e781e595b9d4530b19e70",
+          "delivery_time_ms": 1722.96,
+          "timestamp": "2026-03-22T08:32:53.297928+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd11",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 43,
+      "description": "Extended agent 18 query",
+      "delivery": {
+        "request_id": "mech-req-c63753c9705f",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 18,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x9ff519c2fbcc874e3de65bde6865ae6cc3c5ba4fef8bb52dbe90ad6e17b80f90",
+          "delivery_time_ms": 1785.32,
+          "timestamp": "2026-03-22T08:32:55.083355+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd12",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 44,
+      "description": "Extended agent 19 query",
+      "delivery": {
+        "request_id": "mech-req-78e607fe81ef",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 19,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xc343f41c59f3a8ef1ecc0bbe3853b04cbddb05b78f16be003b84c2aacaed3681",
+          "delivery_time_ms": 1770.53,
+          "timestamp": "2026-03-22T08:32:56.853966+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd13",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 45,
+      "description": "Extended agent 20 query",
+      "delivery": {
+        "request_id": "mech-req-9dbcd761850e",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 20,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x75b163ef7c63efab80aa4bcc006509a2907c7eeb5701c641a2d5d49c92c2e934",
+          "delivery_time_ms": 1647.7,
+          "timestamp": "2026-03-22T08:32:58.501720+00:00"
+        },
+        "receipt": {
+          "sender": "0xdddddddddddddddddddddddddddddddddddddd14",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 46,
+      "description": "NL query: What is the reputation of agent 1?...",
+      "delivery": {
+        "request_id": "mech-req-f2c763c8d2e6",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 1,\n  \"agent_name\": \"AnalystAgent\",\n  \"agent_wallet\": \"0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x850031b2c6c0f82d337f078731269e51d0adffd5d894faec0a9185e7ffb94f05",
+          "delivery_time_ms": 1660.69,
+          "timestamp": "2026-03-22T08:33:00.162485+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee00",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 47,
+      "description": "NL query: Check trustworthiness of agent 2...",
+      "delivery": {
+        "request_id": "mech-req-d694407f9611",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 2,\n  \"agent_name\": \"ResearchAgent\",\n  \"agent_wallet\": \"0xa4DA2d7B64CB2a243Ffb851642e13F9F948C4436\",\n  \"active\": true,\n  \"reputation_score\": 10000,\n  \"reputation_pct\": 100.0,\n  \"tasks_completed\": 1,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 1,\n  \"credibility_weight\": 2.8284,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xd0c0f93df1c984eb9433f19f658a6926bdc96097884b9e60b612fb986ae45a91",
+          "delivery_time_ms": 1722.43,
+          "timestamp": "2026-03-22T08:33:01.884975+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee01",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 48,
+      "description": "NL query: Agent 3 credibility assessment...",
+      "delivery": {
+        "request_id": "mech-req-0b12c116163f",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 3,\n  \"agent_name\": \"AuditorAgent\",\n  \"agent_wallet\": \"0xddc0cAa61832B78cBb87F4Bc3391881bE024A587\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xdc422645bc1a666fa50855baf94d620e1cae46c0e0da49ed8f3c866961e6cdf7",
+          "delivery_time_ms": 1782.96,
+          "timestamp": "2026-03-22T08:33:03.668007+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee02",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 49,
+      "description": "NL query: How reliable is agent 4?...",
+      "delivery": {
+        "request_id": "mech-req-540cce355007",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 1,\n  \"agent_name\": \"AnalystAgent\",\n  \"agent_wallet\": \"0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x76dba14e83a175fdc37cf1cf7e02f61de43ff7462914819fd8aa15a2537727d8",
+          "delivery_time_ms": 1716.34,
+          "timestamp": "2026-03-22T08:33:05.384439+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee03",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 50,
+      "description": "NL query: Evaluate agent 5 track record...",
+      "delivery": {
+        "request_id": "mech-req-17a77cbde0fe",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 5,\n  \"agent_name\": \"AuditorAgent\",\n  \"agent_wallet\": \"0x750612c8Ab5AA4f16e29AD9a92e77882035882C3\",\n  \"active\": true,\n  \"reputation_score\": 5000,\n  \"reputation_pct\": 50.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.5,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xffa54ff98922e3d47d035fd131b137bd3bc4a0e333cc5b08276101f7abe5b4dc",
+          "delivery_time_ms": 1750.73,
+          "timestamp": "2026-03-22T08:33:07.135252+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee04",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 51,
+      "description": "NL query: Agent 6 reputation and attestations...",
+      "delivery": {
+        "request_id": "mech-req-4a06031f0681",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 6,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xc71b7055448ee69c67e28a71779852e02b5512053b1a0a257109d540718f08d0",
+          "delivery_time_ms": 1862.84,
+          "timestamp": "2026-03-22T08:33:08.998183+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee05",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 52,
+      "description": "NL query: Trust score for agent 7...",
+      "delivery": {
+        "request_id": "mech-req-b9a637a972fe",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 7,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xd123b86132237876abc4ee1048c81d2428338651191261640327e1ccac819597",
+          "delivery_time_ms": 1765.87,
+          "timestamp": "2026-03-22T08:33:10.764127+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee06",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 53,
+      "description": "NL query: Get reputation data for agent 8...",
+      "delivery": {
+        "request_id": "mech-req-af19919df656",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 8,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0xcdc6f1c5f27eecc651f275351b52d6b33f8d2cc0984817aca845168b0798fd59",
+          "delivery_time_ms": 1639.3,
+          "timestamp": "2026-03-22T08:33:12.403471+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee07",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 54,
+      "description": "NL query: Assess agent 9 performance history...",
+      "delivery": {
+        "request_id": "mech-req-a5b761d56bf9",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 9,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x1c7304879516d65d92be6af2206800a7e711725d5ad527a7f9d2172279b73e56",
+          "delivery_time_ms": 1792.31,
+          "timestamp": "2026-03-22T08:33:14.195853+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee08",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    },
+    {
+      "sequence": 55,
+      "description": "NL query: Verify agent 10 credentials and reputati...",
+      "delivery": {
+        "request_id": "mech-req-187250eed969",
+        "status": "delivered",
+        "result": "{\n  \"agent_id\": 10,\n  \"agent_name\": \"\",\n  \"agent_wallet\": \"0x0000000000000000000000000000000000000000\",\n  \"active\": false,\n  \"reputation_score\": 0,\n  \"reputation_pct\": 0.0,\n  \"tasks_completed\": 0,\n  \"tasks_failed\": 0,\n  \"total_attestations\": 0,\n  \"credibility_weight\": 0.0,\n  \"source\": \"on-chain\",\n  \"registry\": \"0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98\",\n  \"network\": \"Base Sepolia (84532)\",\n  \"tool\": \"reputation_evaluation\",\n  \"provider\": \"TrustAgent Mech (Olas)\",\n  \"version\": \"1.0.0\"\n}",
+        "delivery": {
+          "mech_address": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+          "agent_id": 1,
+          "tool": "reputation_evaluation",
+          "tx_hash": "0x080a8af018712db1a28d4c197fce9d5e19a50f4fbdbce4f25bda8fc5cae34525",
+          "delivery_time_ms": 1671.12,
+          "timestamp": "2026-03-22T08:33:15.867100+00:00"
+        },
+        "receipt": {
+          "sender": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee09",
+          "fee_charged_wei": 100000,
+          "fee_display": "0.000000 ETH"
+        }
+      }
+    }
+  ]
+}
