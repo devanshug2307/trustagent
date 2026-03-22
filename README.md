@@ -119,6 +119,11 @@ npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --netwo
 - Higher-reputation evaluators have more influence on the final ranking
 - Budget is allocated proportionally to composite scores, capped at each project's requested amount
 
+**Live data collection (GitHub REST API + BaseScan API):**
+- **GitHub:** Fetches real commit counts, unique contributors, open/closed issues, README existence via GitHub REST API v3 (`/repos`, `/contributors`, `/commits`, `/search/issues`)
+- **BaseScan:** Queries deployed contract verification, transaction count via `eth_getCode`, `eth_getTransactionCount` RPC, and BaseScan `txlist` API
+- All evidence is gathered live at evaluation time -- not hardcoded
+
 ```bash
 python3 src/public_goods_evaluator.py   # run offline demo
 ```
@@ -258,14 +263,19 @@ nick.eth     -> 0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5
 python3 src/ens_resolver.py   # run ENS resolution demo
 ```
 
+## Agent Identity Files
+
+- **`agent.json`** — Machine-readable agent descriptor with name, version, capabilities, supported tools, tech stack, smart contract addresses, and links. Enables programmatic agent discovery and interoperability.
+- **`agent_log.json`** — Complete activity log recording all agent operations, onchain transactions, and evaluation results.
+
 ## Integrations
 
 - **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia (all three pillars: Identity, Reputation, Receipts)
 - **ENS Open Integration**: Real on-chain ENS resolution (forward + reverse) on Ethereum mainnet — names are the primary agent identifier, verified at registration time
-- **Olas/Pearl Compatible**: Agent registration, service offerings, and request handling matching Olas service component schema
+- **Olas/Pearl Compatible**: Agent registration, service offerings, and request handling matching Olas service component schema with monetization support — agents can price their services and track revenue
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
 - **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
-- **Octant Public Goods**: Reputation-weighted project evaluation with multi-source data collection (GitHub + on-chain evidence)
+- **Octant Public Goods**: Reputation-weighted project evaluation with live multi-source data collection (GitHub REST API + BaseScan API)
 - **Arkhai Escrow**: Delegation protocol extends to lock-perform-release trust primitives for agent commerce
 
 ## Built By
@@ -338,6 +348,9 @@ trustagent/
 │   └── AgentRegistry.test.cjs   # 23 tests
 ├── docs/
 │   └── index.html               # Live dashboard
+├── agent.json                   # Agent identity + capabilities descriptor
+├── agent_log.json               # Full agent activity log
+├── octant_demo_output.json      # Octant evaluator demo output
 ├── hardhat.config.cjs
 ├── README.md
 └── package.json
