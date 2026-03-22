@@ -20,7 +20,7 @@ TrustAgent builds the trust layer for autonomous agents:
 2. **Reputation System** — Track record of completed tasks, reliability scores
 3. **Delegation Framework** — Scoped permissions that agents grant to each other
 4. **Agent Discovery** — Find and evaluate agents by capability and reputation
-5. **ENS Integration** — Human-readable names for all agent interactions
+5. **ENS Integration** — Real on-chain ENS resolution (forward + reverse) makes names the primary identifier, not an afterthought
 
 ## Architecture
 
@@ -231,9 +231,37 @@ All receipts are permanently stored on Base Sepolia and queryable via any block 
 python3 src/olas_integration.py   # run Olas integration demo
 ```
 
+## ENS Integration (ENS Open Integration Track)
+
+`src/ens_resolver.py` implements real on-chain ENS name resolution on Ethereum mainnet -- ENS names are the primary identifier for agents, not a cosmetic label.
+
+**What it does:**
+- **Forward resolution** — Resolves ENS names to Ethereum addresses via the ENS Registry (`0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e`) and per-name resolver contracts
+- **Reverse resolution** — Resolves addresses back to their primary ENS name via `<addr>.addr.reverse`
+- **Bidirectional verification** — Confirms forward + reverse match (the gold standard for ENS identity)
+- **Agent registration gate** — When registering an agent, the ENS name is resolved on-chain and verified against the registrant's wallet. Verification levels: `full` (forward + reverse), `forward` (name resolves to wallet), `partial` (name exists but resolves elsewhere), `none`
+- **Names as primary identifiers** — If ENS verification passes, the agent's `primary_identifier` becomes the ENS name, not the hex address
+
+**How it works (no web3.py dependency):**
+1. Computes the EIP-137 namehash for the ENS name (pure Keccak-256)
+2. Queries the ENS Registry contract via `eth_call` for the resolver address
+3. Queries the resolver for `addr(node)` (forward) or `name(node)` (reverse)
+4. All calls go to Ethereum mainnet via free RPC endpoints
+
+**Verified working with real ENS names:**
+```
+vitalik.eth  -> 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045  (reverse: vitalik.eth)
+nick.eth     -> 0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5
+```
+
+```bash
+python3 src/ens_resolver.py   # run ENS resolution demo
+```
+
 ## Integrations
 
 - **ERC-8004 Compatible**: Agent identity with registration, attestation receipts, and reputation — deployed on Base Sepolia (all three pillars: Identity, Reputation, Receipts)
+- **ENS Open Integration**: Real on-chain ENS resolution (forward + reverse) on Ethereum mainnet — names are the primary agent identifier, verified at registration time
 - **Olas/Pearl Compatible**: Agent registration, service offerings, and request handling matching Olas service component schema
 - **Capability Discovery**: Onchain index mapping capabilities to agents for programmatic agent-to-agent discovery
 - **Protocol Labs**: Trust layer with verifiable onchain receipts from peer attestations
@@ -287,6 +315,9 @@ npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --netwo
 
 # Run public goods evaluator demo
 python3 src/public_goods_evaluator.py
+
+# Run ENS resolution demo (resolves real names on Ethereum mainnet)
+python3 src/ens_resolver.py
 ```
 
 ## Project Structure
@@ -301,7 +332,8 @@ trustagent/
 │   └── onchain-demo.cjs         # Single agent demo
 ├── src/
 │   ├── public_goods_evaluator.py  # Octant: reputation-weighted evaluation + data collection
-│   └── olas_integration.py        # Olas: Pearl-compatible agent services + monetization
+│   ├── olas_integration.py        # Olas: Pearl-compatible agent services + monetization
+│   └── ens_resolver.py            # ENS: real mainnet name resolution + agent identity verification
 ├── test/
 │   └── AgentRegistry.test.cjs   # 23 tests
 ├── docs/
