@@ -80,6 +80,8 @@ Scoped permissions between agents:
 
 ## Smart Contract
 
+**Code:** [`contracts/AgentRegistry.sol`](contracts/AgentRegistry.sol) -- identity, reputation, delegation, and discovery in a single contract
+
 ### AgentRegistry.sol
 ```solidity
 // Core functions
@@ -91,6 +93,8 @@ function delegate(uint256 toAgentId, bytes32[] permissions, uint256 expiry)
 ```
 
 ## Multi-Agent Onchain Demo
+
+**Code:** [`scripts/multi-agent-demo.cjs`](scripts/multi-agent-demo.cjs) -- deploys, registers, delegates, attests, and queries in a single script
 
 The `scripts/multi-agent-demo.cjs` script demonstrates the full multi-agent lifecycle on Base Sepolia:
 
@@ -107,6 +111,8 @@ npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --netwo
 ```
 
 ## Public Goods Evaluator (Octant Tracks)
+
+**Code:** [`src/public_goods_evaluator.py`](src/public_goods_evaluator.py) -- reputation-weighted evaluation with live GitHub + BaseScan data collection
 
 `src/public_goods_evaluator.py` implements reputation-weighted public goods project evaluation, targeting all three Octant tracks:
 
@@ -133,6 +139,8 @@ python3 src/public_goods_evaluator.py   # run offline demo
 ```
 
 ## Alkahest/Arkhai Escrow Integration (Arkhai Track)
+
+**Code:** [`src/alkahest_escrow.mjs`](src/alkahest_escrow.mjs) -- escrow creation, fulfillment, oracle arbitration, and collection via alkahest-ts SDK
 
 TrustAgent integrates the **alkahest-ts SDK (v0.7.5)** as a load-bearing escrow layer for agent-to-agent commerce on Base Sepolia. Alkahest provides conditional peer-to-peer escrow built on EAS (Ethereum Attestation Service) -- TrustAgent uses it so that payment for agent tasks is only released when the worker passes an on-chain reputation check.
 
@@ -266,6 +274,8 @@ All receipts are permanently stored on Base Sepolia and queryable via any block 
 
 ## Olas Integration (Build + Monetize Tracks)
 
+**Code:** [`src/olas_integration.py`](src/olas_integration.py) -- Pearl-compatible service component with monetization
+
 `src/olas_integration.py` demonstrates how TrustAgent agents operate as Pearl-compatible autonomous services in the Olas ecosystem:
 
 - **Agent Registration** — Maps TrustAgent identity to Olas `ServiceComponent` schema
@@ -278,6 +288,8 @@ python3 src/olas_integration.py   # run Olas integration demo
 ```
 
 ## Olas Mech Server (Monetize Your Agent Track)
+
+**Code:** [`src/mech_server.py`](src/mech_server.py) (HTTP mech server), [`src/mech_client_test.py`](src/mech_client_test.py) (test client)
 
 TrustAgent runs as an Olas-compatible mech server that serves the `reputation_evaluation` tool via the standard mech request/deliver protocol. This satisfies the Olas "Monetize Your Agent" track requirement of serving 50+ requests.
 
@@ -357,6 +369,8 @@ python3 -m src.mech_client_test --requests 60
 
 ## ENS Integration (ENS Open Integration Track)
 
+**Code:** [`src/ens_resolver.py`](src/ens_resolver.py) -- pure-Python ENS resolution with EIP-137 namehash, zero external crypto dependencies
+
 `src/ens_resolver.py` implements real on-chain ENS name resolution on Ethereum mainnet -- ENS names are the primary identifier for agents, not a cosmetic label.
 
 **What it does:**
@@ -388,6 +402,8 @@ python3 src/ens_resolver.py   # run ENS resolution demo
 - **`agent_log.json`** — Complete activity log recording all agent operations, onchain transactions, and evaluation results.
 
 ## OpenServ SDK Integration (OpenServ Track)
+
+**Code:** [`src/openserv_agent.mjs`](src/openserv_agent.mjs) -- OpenServ SDK agent with 4 on-chain capabilities, Zod-validated inputs
 
 `src/openserv_agent.mjs` registers TrustAgent as a full OpenServ-compatible agent using the `@openserv-labs/sdk` (v2.4.1). The agent exposes 4 capabilities that read directly from the on-chain AgentRegistry contract on Base Sepolia:
 
@@ -457,6 +473,16 @@ npm run openserv:start   # start agent on OpenServ platform (requires OPENSERV_A
 | 8 | ENS Open Integration | ENS | Real mainnet ENS resolution (forward + reverse) |
 | 9 | Ship Something Real with OpenServ | OpenServ | Live SDK agent, workspace 13044, 4 capabilities |
 | 10 | Agents With Receipts — ERC-8004 | Protocol Labs | 3-pillar compliance, 6 onchain TXs |
+
+## What Makes This Novel
+
+Most "agent platforms" either give agents a shared database or rely on centralized reputation APIs. TrustAgent is structurally different:
+
+1. **Trust is on-chain, not off-chain.** Reputation scores, attestations, and delegations live in a smart contract on Base Sepolia. There is no centralized trust server to go down or be gamed -- `getReputation()` reads immutable on-chain state that any party can independently verify.
+2. **Reputation gates payment.** Alkahest escrow is not decorative -- the oracle arbitration decision reads the agent's on-chain reputation score from AgentRegistry. If the score is below the threshold, the worker does not get paid. No reputation = no revenue.
+3. **Peer attestation, not self-reporting.** Agents cannot attest their own work (`require(fromAgentId != toAgentId)`). Reputation is built exclusively through peer review, making it resistant to Sybil inflation.
+4. **Multi-standard interoperability.** A single AgentRegistry contract serves as the identity layer for ERC-8004 compliance, the reputation source for Alkahest escrow arbitration, the data backend for Olas mech tools, and the discovery index for OpenServ capabilities. One contract, four integrations.
+5. **Real ENS resolution, not just labels.** ENS names are resolved on Ethereum mainnet via EIP-137 namehash and on-chain resolver queries. Bidirectional verification (forward + reverse) is required for full trust -- `vitalik.eth` is verified, not hardcoded.
 
 ## Built By
 
