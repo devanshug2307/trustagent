@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-22T07:46:26.484Z",
+  "timestamp": "2026-03-23T07:04:23.919Z",
   "test": "alkahest-ts SDK integration verification",
   "sdkVersion": "0.7.5",
   "chain": "Base Sepolia (chainId 84532)",
@@ -103,5 +103,44 @@
     "passed": 7,
     "total": 7,
     "allPassed": true
+  },
+  "liveEscrowDemo": {
+    "timestamp": "2026-03-23T07:04:45.906Z",
+    "network": "Base Sepolia (chainId 84532)",
+    "wallet": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7",
+    "escrowAmountEth": "0.001",
+    "note": "Steps 1-3 executed on-chain with real ETH. Step 4 (collect) reverted with InvalidFulfillment because same wallet was used for delegator+worker+oracle (Alkahest requires separate fulfiller). A second WORKER_KEY with Base Sepolia ETH is needed for full end-to-end collect.",
+    "step1_createEscrow": {
+      "status": "SUCCESS",
+      "txHash": "0xdb442c26dbb46e170a44f48487380f50e913b3337ccd7de23e6ba762a9e221c2",
+      "escrowUid": "0xd91b4286c97ccabb724c9c0dda7c528c5b9b665067b78be441460f48098b0265",
+      "task": "Analyze DeFi protocol risk for Compound V3",
+      "requiredCapability": "research",
+      "minReputationScore": 5000,
+      "oracleAddress": "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7"
+    },
+    "step2_workerFulfill": {
+      "status": "SUCCESS",
+      "txHash": "0x2fcf00aa2d378d4f501d2fa96db38677ec9dac65632d1e84fab11f3353f395f1",
+      "fulfillmentUid": "0xc685ab8026aa643d9dd98e0a690db42d8b9a9fb000647ec2e49c891bf19f2c8f"
+    },
+    "step3_oracleArbitrate": {
+      "status": "SUCCESS",
+      "txHash": "0xa147815b553620e6bc4ccae654615f0853cb5dcaf08a545930ec1f6de12f163f",
+      "decision": "APPROVE",
+      "workerAgentId": 1,
+      "workerScore": 5000,
+      "threshold": 5000
+    },
+    "step4_collect": {
+      "status": "REVERTED",
+      "error": "InvalidFulfillment",
+      "reason": "Same address used for delegator and worker; Alkahest escrow contract requires distinct fulfiller address"
+    },
+    "basescanLinks": {
+      "escrowTx": "https://sepolia.basescan.org/tx/0xdb442c26dbb46e170a44f48487380f50e913b3337ccd7de23e6ba762a9e221c2",
+      "fulfillTx": "https://sepolia.basescan.org/tx/0x2fcf00aa2d378d4f501d2fa96db38677ec9dac65632d1e84fab11f3353f395f1",
+      "arbitrateTx": "https://sepolia.basescan.org/tx/0xa147815b553620e6bc4ccae654615f0853cb5dcaf08a545930ec1f6de12f163f"
+    }
   }
 }
