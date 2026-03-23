@@ -495,6 +495,21 @@ def _to_checksum_address(address: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# ENS Verification Error
+# ---------------------------------------------------------------------------
+
+class ENSVerificationError(Exception):
+    """
+    Raised when ENS verification fails during agent registration.
+
+    The AgentRegistry contract on-chain accepts any string as an ensName,
+    so this off-chain error provides the enforcement layer that prevents
+    agents from claiming ENS names they do not control.
+    """
+    pass
+
+
+# ---------------------------------------------------------------------------
 # Integration with AgentRegistry
 # ---------------------------------------------------------------------------
 
@@ -521,9 +536,17 @@ class ENSAgentRegistry:
         ens_name: str,
         wallet_address: str,
         capabilities: list[str],
+        *,
+        strict: bool = True,
     ) -> dict:
         """
         Register an agent with ENS verification.
+
+        Off-chain enforcement: the on-chain AgentRegistry contract accepts
+        any string as ensName, so this method provides a critical validation
+        layer.  When ``strict=True`` (the default), registration is REJECTED
+        if the ENS name does not resolve to the agent's wallet address.  This
+        prevents agents from claiming ENS names they do not control.
 
         Parameters
         ----------
@@ -535,11 +558,22 @@ class ENSAgentRegistry:
             Wallet address of the agent
         capabilities : list[str]
             List of agent capabilities
+        strict : bool, default True
+            If True, raise ``ENSVerificationError`` when the ENS name does
+            not resolve to ``wallet_address``.  If False, registration
+            proceeds with a warning (backward-compatible behaviour).
 
         Returns
         -------
         dict
             Registration result with ENS verification status
+
+        Raises
+        ------
+        ENSVerificationError
+            If ``strict=True`` and ENS verification fails.  The error
+            message explains *why* the registration was rejected so the
+            caller can take corrective action.
         """
         # Step 1: Resolve the ENS name
         identity = self.resolver.resolve_agent_identity(ens_name)
@@ -551,7 +585,30 @@ class ENSAgentRegistry:
                 ens_name, wallet_address
             )
 
+        # Step 2b: Enforce ENS ownership (off-chain guard for on-chain gap)
+        if strict and not ownership_verified:
+            if identity["resolved_address"] is None:
+                raise ENSVerificationError(
+                    f"Registration rejected: ENS name '{ens_name}' does not "
+                    f"resolve to any address on Ethereum mainnet.  The agent "
+                    f"cannot claim an unregistered or expired ENS name.  "
+                    f"Register '{ens_name}' on ENS (https://app.ens.domains) "
+                    f"and point it to {wallet_address} before retrying."
+                )
+            else:
+                raise ENSVerificationError(
+                    f"Registration rejected: ENS name '{ens_name}' resolves "
+                    f"to {identity['resolved_address']}, but the agent wallet "
+                    f"is {wallet_address}.  The resolved address does not "
+                    f"match the registrant's wallet.  Only the address that "
+                    f"controls the ENS name may register with it."
+                )
+
         # Step 3: Build the registration record
+        verification_level = _compute_verification_level(
+            identity, ownership_verified
+        )
+
         registration = {
             "agent_name": agent_name,
             "ens_name": ens_name,
@@ -563,13 +620,22 @@ class ENSAgentRegistry:
                 "ownership_match": ownership_verified,
                 "reverse_verified": identity["reverse_verified"],
                 "reverse_name": identity["reverse_name"],
-                "verification_level": _compute_verification_level(
-                    identity, ownership_verified
-                ),
+                "verification_level": verification_level,
+                "enforcement": "strict" if strict else "permissive",
             },
+            "registration_status": "approved" if ownership_verified else "warning",
             "primary_identifier": ens_name if ownership_verified else wallet_address,
             "timestamp": time.time(),
         }
+
+        # Non-strict mode: attach a warning instead of raising
+        if not strict and not ownership_verified:
+            registration["warning"] = (
+                f"ENS verification failed for '{ens_name}'. The name "
+                f"{'does not resolve' if not identity['resolved_address'] else 'resolves to a different address'}. "
+                f"Registration proceeded in permissive mode but the agent "
+                f"will not receive ENS-verified trust status."
+            )
 
         return registration
 
@@ -637,8 +703,8 @@ def demo():
     identity = resolver.resolve_agent_identity("vitalik.eth")
     print(json.dumps(identity, indent=2))
 
-    # --- Agent Registration with ENS Verification ---
-    print("\n--- Agent Registration with ENS Verification ---")
+    # --- Agent Registration with ENS Verification (strict mode) ---
+    print("\n--- Agent Registration with ENS Verification (strict) ---")
     registry = ENSAgentRegistry()
     registration = registry.register_with_ens(
         agent_name="ResearchAgent",
@@ -647,6 +713,44 @@ def demo():
         capabilities=["research", "analysis", "public-goods-eval"],
     )
     print(json.dumps(registration, indent=2, default=str))
+
+    # --- Demonstrate ENS enforcement: mismatched address ---
+    print("\n--- ENS Enforcement: Mismatched Address (strict) ---")
+    try:
+        registry.register_with_ens(
+            agent_name="FakeAgent",
+            ens_name="vitalik.eth",
+            wallet_address="0x0000000000000000000000000000000000001234",
+            capabilities=["fraud"],
+        )
+        print("  ERROR: registration should have been rejected!")
+    except ENSVerificationError as e:
+        print(f"  REJECTED: {e}")
+
+    # --- Demonstrate ENS enforcement: unregistered name ---
+    print("\n--- ENS Enforcement: Unregistered Name (strict) ---")
+    try:
+        registry.register_with_ens(
+            agent_name="GhostAgent",
+            ens_name="nonexistent-name-xyz-12345.eth",
+            wallet_address="0x0000000000000000000000000000000000005678",
+            capabilities=["ghost"],
+        )
+        print("  ERROR: registration should have been rejected!")
+    except ENSVerificationError as e:
+        print(f"  REJECTED: {e}")
+
+    # --- Demonstrate permissive mode (backward compatible) ---
+    print("\n--- ENS Registration: Permissive Mode (strict=False) ---")
+    permissive_result = registry.register_with_ens(
+        agent_name="TestAgent",
+        ens_name="vitalik.eth",
+        wallet_address="0x0000000000000000000000000000000000001234",
+        capabilities=["test"],
+        strict=False,
+    )
+    print(f"  Status: {permissive_result['registration_status']}")
+    print(f"  Warning: {permissive_result.get('warning', 'none')}")
 
     # --- Batch Resolution ---
     print("\n--- Batch Resolution ---")
@@ -659,7 +763,8 @@ def demo():
     print("  ENS is core to TrustAgent identity:")
     print("  - Names replace addresses as the primary identifier")
     print("  - Forward + reverse resolution verifies ownership")
-    print("  - Registration requires ENS verification")
+    print("  - Registration ENFORCES ENS verification (off-chain guard)")
+    print("  - Mismatched addresses are REJECTED with clear error messages")
     print("=" * 72)
 
 

@@ -1,18 +1,29 @@
 """
-olas_integration.py — TrustAgent <> Olas/Pearl Integration Layer
+olas_integration.py — TrustAgent <> Olas/Pearl Architecture Reference
 
-Maps TrustAgent's AgentRegistry to the Olas ecosystem, enabling TrustAgent
-agents to operate as Pearl-compatible autonomous services.
+STATUS: Architecture reference implementation (not connected to a live Pearl node)
 
-Olas concepts implemented:
-  - Agent registration  → maps to Olas service component schema
-  - Service offering    → pricing model for agent capabilities
-  - Request handling    → standard request/response lifecycle
-  - Monetization        → fee collection and revenue tracking
+This module demonstrates how TrustAgent's on-chain AgentRegistry maps to the
+Olas ecosystem's service component model.  It implements the *interface layer*
+between TrustAgent agents and the Olas/Pearl autonomous service framework:
 
-This module is a working stub that demonstrates interface compatibility.
-It does not require a running Olas node — it shows how TrustAgent's
-on-chain identity and reputation naturally extend into the Olas framework.
+  - Agent registration  -> maps to Olas service component schema
+  - Service offering    -> pricing model compatible with Olas Mech marketplace
+  - Request handling    -> standard request/response lifecycle with fee validation
+  - Monetization        -> fee collection and revenue tracking
+
+This is an architecture reference — it runs without a Pearl node and uses
+demo execution for service requests.  All data structures and interfaces
+match the Olas specifications so that connecting to a real Pearl deployment
+requires only swapping the execution backend.
+
+TODO for production integration:
+  - Deploy an Olas service on-chain via the Olas ServiceRegistry contract
+  - Run a Pearl agent node and connect this module's request handler
+  - Replace _execute_service_demo() with actual agent logic via Pearl's
+    execution environment
+  - Register the IPFS package_hash and config_hash for the agent code
+  - Stake the required OLAS tokens for the service bond
 
 Usage:
     from olas_integration import OlasCompatibleAgent
@@ -29,7 +40,7 @@ Usage:
     # List service offerings
     services = agent.get_service_offerings()
 
-    # Handle an incoming request
+    # Handle an incoming request (demo execution)
     result = agent.handle_request({
         "service_id": "public-goods-eval",
         "payload": {"project_name": "OpenResearch DAO"},
@@ -351,9 +362,10 @@ class OlasCompatibleAgent:
             status=RequestStatus.ACCEPTED,
         )
 
-        # Execute service (stub — in production this would run the actual logic)
+        # Execute service (demo — in production, Pearl node handles execution)
+        # TODO: Replace with Pearl agent execution environment for production
         req.status = RequestStatus.IN_PROGRESS
-        result = self._execute_service_stub(service, payload)
+        result = self._execute_service_demo(service, payload)
         req.result = result
         req.status = RequestStatus.COMPLETED
 
@@ -380,8 +392,20 @@ class OlasCompatibleAgent:
             },
         }
 
-    def _execute_service_stub(self, service: ServiceOffering, payload: dict) -> dict:
-        """Stub execution — returns sample output for each service type."""
+    def _execute_service_demo(self, service: ServiceOffering, payload: dict) -> dict:
+        """
+        Demo execution -- returns representative output for each service type.
+
+        In a production Olas/Pearl deployment, this method would be replaced by
+        the Pearl agent's execution environment which runs the actual analysis
+        logic inside a secure, auditable container.
+
+        TODO: Connect to Pearl execution environment:
+          - Pearl node handles request routing to the correct agent instance
+          - Agent code runs in a deterministic environment (for reproducibility)
+          - Results are hashed and posted on-chain as part of the Mech protocol
+          - Fee is released from escrow only after on-chain result confirmation
+        """
         if service.service_id == "public-goods-eval":
             return {
                 "evaluation": "completed",
@@ -393,22 +417,25 @@ class OlasCompatibleAgent:
                 },
                 "composite_score": 7.1,
                 "methodology": "reputation-weighted multi-evaluator scoring",
+                "execution_mode": "demo",
             }
         elif service.service_id == "data-analysis":
             return {
                 "analysis": "completed",
                 "data_points_processed": 1000,
-                "summary": "Analysis stub — would process on-chain data",
+                "summary": "Demo output -- production would process live on-chain data via Pearl",
+                "execution_mode": "demo",
             }
         elif service.service_id == "smart-contract-audit":
             return {
                 "audit": "completed",
                 "findings": 0,
                 "severity_breakdown": {"critical": 0, "high": 0, "medium": 0, "low": 0},
-                "summary": "Audit stub — would analyze contract bytecode and source",
+                "summary": "Demo output -- production would analyze bytecode via Pearl agent",
+                "execution_mode": "demo",
             }
         else:
-            return {"status": "completed", "note": "Service execution stub"}
+            return {"status": "completed", "execution_mode": "demo"}
 
     # ── Revenue Tracking (Monetize) ────────────────────────────────
 
@@ -432,11 +459,15 @@ class OlasCompatibleAgent:
 # Demo
 # ---------------------------------------------------------------------------
 def demo():
-    """Demonstrate the Olas integration with TrustAgent agents."""
+    """Demonstrate the Olas architecture reference with TrustAgent agents."""
     print("=" * 72)
-    print("  TrustAgent <> Olas Integration Demo")
-    print("  Pearl-Compatible Agent Services")
+    print("  TrustAgent <> Olas Architecture Reference Demo")
+    print("  Pearl-Compatible Interface (demo execution mode)")
     print("=" * 72)
+    print()
+    print("  NOTE: This demonstrates the interface layer between TrustAgent")
+    print("  and the Olas/Pearl ecosystem. Service execution uses demo output.")
+    print("  Production deployment requires a running Pearl agent node.")
 
     # Create an agent with public-goods-eval and analysis capabilities
     agent = OlasCompatibleAgent(
