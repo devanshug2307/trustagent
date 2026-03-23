@@ -1,0 +1,684 @@
+{
+  "title": "TrustAgent Multi-Agent Coordination Proof",
+  "timestamp": "2026-03-23T06:19:36.017Z",
+  "architecture": {
+    "coordinator": "AgentCoordinator — orchestrates task routing and result aggregation",
+    "message_bus": "MessageBus — typed inter-agent message passing with audit log",
+    "agents": [
+      {
+        "name": "TrustAgent Reputation Oracle",
+        "role": "Trust verification, agent discovery, on-chain reputation lookups",
+        "capabilities": [
+          "get_reputation",
+          "discover_agents",
+          "verify_trust",
+          "delegate_evaluation",
+          "get_evaluation_result"
+        ],
+        "agent_number": 1
+      },
+      {
+        "name": "TrustAgent Evaluator",
+        "role": "Multi-criteria project evaluation, due-diligence analysis, report generation",
+        "capabilities": [
+          "evaluate_project",
+          "generate_report"
+        ],
+        "agent_number": 2
+      },
+      {
+        "name": "TrustAgent Risk Analyzer",
+        "role": "Risk assessment, red flag detection, attack vector analysis, threat modeling",
+        "capabilities": [
+          "analyze_risk",
+          "generate_risk_matrix"
+        ],
+        "agent_number": 3
+      }
+    ]
+  },
+  "coordination_patterns": [
+    "Orchestrator dispatches sub-tasks to specialist agents",
+    "Parallel fan-out: Evaluator and RiskAnalyzer execute concurrently",
+    "Typed message bus enables traceable inter-agent communication",
+    "Results aggregation: scores from multiple agents merged into unified verdict",
+    "Trust-gated delegation: on-chain reputation check before task assignment",
+    "Reputation weighting: outputs weighted by agent on-chain trust score"
+  ],
+  "openserv_sdk_features": [
+    "createTask — task routing between agents in a workspace",
+    "completeTask — agent marks delegated work as done",
+    "getTaskDetail — check status of delegated tasks",
+    "getAgents — discover agents by capability in a workspace",
+    "sendChatMessage — chat-based agent collaboration",
+    "uploadFile — file sharing across agent workflows",
+    "addLogToTask — audit logging on delegated tasks"
+  ],
+  "evaluations": [
+    {
+      "coordination_id": "coord_1774246774921_ge5vfe",
+      "project": "OpenResearch DAO",
+      "status": "completed",
+      "trust_verification": {
+        "passed": true,
+        "score": 5000,
+        "tasks_completed": 0,
+        "tasks_failed": 0
+      },
+      "evaluation_composite": 92.7,
+      "risk_score": 20,
+      "risk_level": "low",
+      "red_flags": [
+        {
+          "flag": "no_roadmap",
+          "severity": "low",
+          "detail": "No development roadmap or milestones mentioned"
+        }
+      ],
+      "final_score": 87.1,
+      "recommendation": "APPROVED - Project passes multi-agent assessment",
+      "agents_involved": [
+        "Oracle",
+        "Evaluator",
+        "RiskAnalyzer"
+      ],
+      "messages_exchanged": 9,
+      "duration_ms": 417
+    },
+    {
+      "coordination_id": "coord_1774246775338_t5vc45",
+      "project": "QuickFlip Token",
+      "status": "completed",
+      "trust_verification": {
+        "passed": true,
+        "score": 5000,
+        "tasks_completed": 0,
+        "tasks_failed": 0
+      },
+      "evaluation_composite": 73.1,
+      "risk_score": 63,
+      "risk_level": "high",
+      "red_flags": [
+        {
+          "flag": "no_security_audit_mentioned",
+          "severity": "medium",
+          "detail": "No mention of security audits or formal verification"
+        },
+        {
+          "flag": "unrealistic_promises",
+          "severity": "critical",
+          "detail": "Description contains unrealistic financial promises"
+        }
+      ],
+      "final_score": 59.3,
+      "recommendation": "CONDITIONAL - Project shows promise but has identified risks",
+      "agents_involved": [
+        "Oracle",
+        "Evaluator",
+        "RiskAnalyzer"
+      ],
+      "messages_exchanged": 18,
+      "duration_ms": 400
+    },
+    {
+      "coordination_id": "coord_1774246775739_r1dfax",
+      "project": "EcoFund Protocol",
+      "status": "completed",
+      "trust_verification": {
+        "passed": true,
+        "score": 5000,
+        "tasks_completed": 0,
+        "tasks_failed": 0
+      },
+      "evaluation_composite": 91.3,
+      "risk_score": 30,
+      "risk_level": "medium",
+      "red_flags": [
+        {
+          "flag": "anonymous_team",
+          "severity": "medium",
+          "detail": "No team or contributor information provided"
+        },
+        {
+          "flag": "no_roadmap",
+          "severity": "low",
+          "detail": "No development roadmap or milestones mentioned"
+        }
+      ],
+      "final_score": 83.1,
+      "recommendation": "APPROVED - Project passes multi-agent assessment",
+      "agents_involved": [
+        "Oracle",
+        "Evaluator",
+        "RiskAnalyzer"
+      ],
+      "messages_exchanged": 27,
+      "duration_ms": 277
+    }
+  ],
+  "message_bus_log": [
+    {
+      "id": 1,
+      "timestamp": "2026-03-23T06:19:34.921Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "pipeline_start",
+      "payload": {
+        "coordination_id": "coord_1774246774921_ge5vfe",
+        "project": "OpenResearch DAO"
+      }
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-03-23T06:19:34.921Z",
+      "from": "Coordinator",
+      "to": "Oracle",
+      "type": "task_request",
+      "payload": {
+        "task": "verify_trust",
+        "requester_agent_id": 1
+      }
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-03-23T06:19:35.336Z",
+      "from": "Oracle",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "verify_trust",
+        "result": {
+          "passed": true,
+          "score": 5000,
+          "tasks_completed": 0,
+          "tasks_failed": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-03-23T06:19:35.336Z",
+      "from": "Coordinator",
+      "to": "Evaluator",
+      "type": "task_request",
+      "payload": {
+        "task": "evaluate_project",
+        "project_name": "OpenResearch DAO",
+        "project_description": "A decentralized autonomous organization funding open source research. Community governance via on-chain voting. Treasury managed by a multisig with transparent grant allocation. Team of 12 contributors. Security audit by OpenZeppelin completed Q4 2025."
+      }
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-03-23T06:19:35.336Z",
+      "from": "Coordinator",
+      "to": "RiskAnalyzer",
+      "type": "task_request",
+      "payload": {
+        "task": "analyze_risk",
+        "project_name": "OpenResearch DAO",
+        "project_description": "A decentralized autonomous organization funding open source research. Community governance via on-chain voting. Treasury managed by a multisig with transparent grant allocation. Team of 12 contributors. Security audit by OpenZeppelin completed Q4 2025."
+      }
+    },
+    {
+      "id": 6,
+      "timestamp": "2026-03-23T06:19:35.338Z",
+      "from": "Evaluator",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "evaluate_project",
+        "result": {
+          "project": "OpenResearch DAO",
+          "evaluation": {
+            "legitimacy": {
+              "score": 97.6,
+              "rationale": "Project has detailed description indicating genuine effort"
+            },
+            "impact": {
+              "score": 89,
+              "rationale": "Project addresses public goods with potential broad impact"
+            },
+            "sustainability": {
+              "score": 90.1,
+              "rationale": "Project describes a funding or sustainability model"
+            },
+            "composite_score": 92.7
+          },
+          "evaluator": "TrustAgent Evaluator",
+          "methodology": "Multi-criteria heuristic analysis with NLP-based signal detection",
+          "timestamp": "2026-03-23T06:19:35.337Z"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-03-23T06:19:35.338Z",
+      "from": "RiskAnalyzer",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "analyze_risk",
+        "result": {
+          "project": "OpenResearch DAO",
+          "risk_assessment": {
+            "risk_score": 20,
+            "overall_risk_level": "low",
+            "red_flags": [
+              {
+                "flag": "no_roadmap",
+                "severity": "low",
+                "detail": "No development roadmap or milestones mentioned"
+              }
+            ],
+            "threat_vectors": [
+              {
+                "vector": "smart_contract_risk",
+                "level": "low",
+                "detail": "Smart contracts mentioned with audit references"
+              },
+              {
+                "vector": "governance_risk",
+                "level": "medium",
+                "detail": "Governance structure exists but centralization indicators found"
+              },
+              {
+                "vector": "financial_risk",
+                "level": "low",
+                "detail": "Transparency indicators present but no liquidity details"
+              },
+              {
+                "vector": "sustainability_risk",
+                "level": "low",
+                "detail": "Funding or revenue model is described"
+              }
+            ],
+            "red_flags_count": 1,
+            "threat_vectors_analyzed": 4
+          },
+          "risk_analyzer": "TrustAgent Risk Analyzer",
+          "methodology": "Multi-vector risk assessment with red flag detection and threat modeling",
+          "timestamp": "2026-03-23T06:19:35.337Z"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "timestamp": "2026-03-23T06:19:35.338Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "aggregation_start",
+      "payload": {
+        "coordination_id": "coord_1774246774921_ge5vfe",
+        "agents_reporting": [
+          "Evaluator",
+          "RiskAnalyzer"
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "timestamp": "2026-03-23T06:19:35.338Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "pipeline_end",
+      "payload": {
+        "coordination_id": "coord_1774246774921_ge5vfe",
+        "status": "completed",
+        "duration_ms": 417
+      }
+    },
+    {
+      "id": 10,
+      "timestamp": "2026-03-23T06:19:35.338Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "pipeline_start",
+      "payload": {
+        "coordination_id": "coord_1774246775338_t5vc45",
+        "project": "QuickFlip Token"
+      }
+    },
+    {
+      "id": 11,
+      "timestamp": "2026-03-23T06:19:35.338Z",
+      "from": "Coordinator",
+      "to": "Oracle",
+      "type": "task_request",
+      "payload": {
+        "task": "verify_trust",
+        "requester_agent_id": 1
+      }
+    },
+    {
+      "id": 12,
+      "timestamp": "2026-03-23T06:19:35.737Z",
+      "from": "Oracle",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "verify_trust",
+        "result": {
+          "passed": true,
+          "score": 5000,
+          "tasks_completed": 0,
+          "tasks_failed": 0
+        }
+      }
+    },
+    {
+      "id": 13,
+      "timestamp": "2026-03-23T06:19:35.737Z",
+      "from": "Coordinator",
+      "to": "Evaluator",
+      "type": "task_request",
+      "payload": {
+        "task": "evaluate_project",
+        "project_name": "QuickFlip Token",
+        "project_description": "Guaranteed 100x returns. Anonymous team. No roadmap yet. Just trust us and buy the token. Moonshot incoming."
+      }
+    },
+    {
+      "id": 14,
+      "timestamp": "2026-03-23T06:19:35.737Z",
+      "from": "Coordinator",
+      "to": "RiskAnalyzer",
+      "type": "task_request",
+      "payload": {
+        "task": "analyze_risk",
+        "project_name": "QuickFlip Token",
+        "project_description": "Guaranteed 100x returns. Anonymous team. No roadmap yet. Just trust us and buy the token. Moonshot incoming."
+      }
+    },
+    {
+      "id": 15,
+      "timestamp": "2026-03-23T06:19:35.738Z",
+      "from": "Evaluator",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "evaluate_project",
+        "result": {
+          "project": "QuickFlip Token",
+          "evaluation": {
+            "legitimacy": {
+              "score": 75.4,
+              "rationale": "Project has detailed description indicating genuine effort"
+            },
+            "impact": {
+              "score": 62.5,
+              "rationale": "Impact potential is moderate based on available information"
+            },
+            "sustainability": {
+              "score": 84.3,
+              "rationale": "Project describes a funding or sustainability model"
+            },
+            "composite_score": 73.1
+          },
+          "evaluator": "TrustAgent Evaluator",
+          "methodology": "Multi-criteria heuristic analysis with NLP-based signal detection",
+          "timestamp": "2026-03-23T06:19:35.738Z"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "timestamp": "2026-03-23T06:19:35.738Z",
+      "from": "RiskAnalyzer",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "analyze_risk",
+        "result": {
+          "project": "QuickFlip Token",
+          "risk_assessment": {
+            "risk_score": 63,
+            "overall_risk_level": "high",
+            "red_flags": [
+              {
+                "flag": "no_security_audit_mentioned",
+                "severity": "medium",
+                "detail": "No mention of security audits or formal verification"
+              },
+              {
+                "flag": "unrealistic_promises",
+                "severity": "critical",
+                "detail": "Description contains unrealistic financial promises"
+              }
+            ],
+            "threat_vectors": [
+              {
+                "vector": "smart_contract_risk",
+                "level": "not_applicable",
+                "detail": "No smart contract component detected"
+              },
+              {
+                "vector": "governance_risk",
+                "level": "medium",
+                "detail": "No governance structure described"
+              },
+              {
+                "vector": "financial_risk",
+                "level": "medium",
+                "detail": "Limited financial transparency information"
+              },
+              {
+                "vector": "sustainability_risk",
+                "level": "low",
+                "detail": "Funding or revenue model is described"
+              }
+            ],
+            "red_flags_count": 2,
+            "threat_vectors_analyzed": 4
+          },
+          "risk_analyzer": "TrustAgent Risk Analyzer",
+          "methodology": "Multi-vector risk assessment with red flag detection and threat modeling",
+          "timestamp": "2026-03-23T06:19:35.738Z"
+        }
+      }
+    },
+    {
+      "id": 17,
+      "timestamp": "2026-03-23T06:19:35.738Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "aggregation_start",
+      "payload": {
+        "coordination_id": "coord_1774246775338_t5vc45",
+        "agents_reporting": [
+          "Evaluator",
+          "RiskAnalyzer"
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "timestamp": "2026-03-23T06:19:35.738Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "pipeline_end",
+      "payload": {
+        "coordination_id": "coord_1774246775338_t5vc45",
+        "status": "completed",
+        "duration_ms": 400
+      }
+    },
+    {
+      "id": 19,
+      "timestamp": "2026-03-23T06:19:35.739Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "pipeline_start",
+      "payload": {
+        "coordination_id": "coord_1774246775739_r1dfax",
+        "project": "EcoFund Protocol"
+      }
+    },
+    {
+      "id": 20,
+      "timestamp": "2026-03-23T06:19:35.739Z",
+      "from": "Coordinator",
+      "to": "Oracle",
+      "type": "task_request",
+      "payload": {
+        "task": "verify_trust",
+        "requester_agent_id": 1
+      }
+    },
+    {
+      "id": 21,
+      "timestamp": "2026-03-23T06:19:36.015Z",
+      "from": "Oracle",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "verify_trust",
+        "result": {
+          "passed": true,
+          "score": 5000,
+          "tasks_completed": 0,
+          "tasks_failed": 0
+        }
+      }
+    },
+    {
+      "id": 22,
+      "timestamp": "2026-03-23T06:19:36.016Z",
+      "from": "Coordinator",
+      "to": "Evaluator",
+      "type": "task_request",
+      "payload": {
+        "task": "evaluate_project",
+        "project_name": "EcoFund Protocol",
+        "project_description": "Decentralized climate finance infrastructure for carbon credit trading on-chain. Open source smart contracts with Trail of Bits audit. DAO governance with timelock. Revenue from protocol fees. Global scale ecosystem for verified carbon offsets."
+      }
+    },
+    {
+      "id": 23,
+      "timestamp": "2026-03-23T06:19:36.016Z",
+      "from": "Coordinator",
+      "to": "RiskAnalyzer",
+      "type": "task_request",
+      "payload": {
+        "task": "analyze_risk",
+        "project_name": "EcoFund Protocol",
+        "project_description": "Decentralized climate finance infrastructure for carbon credit trading on-chain. Open source smart contracts with Trail of Bits audit. DAO governance with timelock. Revenue from protocol fees. Global scale ecosystem for verified carbon offsets."
+      }
+    },
+    {
+      "id": 24,
+      "timestamp": "2026-03-23T06:19:36.016Z",
+      "from": "Evaluator",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "evaluate_project",
+        "result": {
+          "project": "EcoFund Protocol",
+          "evaluation": {
+            "legitimacy": {
+              "score": 97.2,
+              "rationale": "Project has detailed description indicating genuine effort"
+            },
+            "impact": {
+              "score": 100,
+              "rationale": "Project addresses public goods with potential broad impact"
+            },
+            "sustainability": {
+              "score": 69.8,
+              "rationale": "Project describes a funding or sustainability model"
+            },
+            "composite_score": 91.3
+          },
+          "evaluator": "TrustAgent Evaluator",
+          "methodology": "Multi-criteria heuristic analysis with NLP-based signal detection",
+          "timestamp": "2026-03-23T06:19:36.016Z"
+        }
+      }
+    },
+    {
+      "id": 25,
+      "timestamp": "2026-03-23T06:19:36.016Z",
+      "from": "RiskAnalyzer",
+      "to": "Coordinator",
+      "type": "task_result",
+      "payload": {
+        "task": "analyze_risk",
+        "result": {
+          "project": "EcoFund Protocol",
+          "risk_assessment": {
+            "risk_score": 30,
+            "overall_risk_level": "medium",
+            "red_flags": [
+              {
+                "flag": "anonymous_team",
+                "severity": "medium",
+                "detail": "No team or contributor information provided"
+              },
+              {
+                "flag": "no_roadmap",
+                "severity": "low",
+                "detail": "No development roadmap or milestones mentioned"
+              }
+            ],
+            "threat_vectors": [
+              {
+                "vector": "smart_contract_risk",
+                "level": "low",
+                "detail": "Smart contracts mentioned with audit references"
+              },
+              {
+                "vector": "governance_risk",
+                "level": "medium",
+                "detail": "Governance structure exists but centralization indicators found"
+              },
+              {
+                "vector": "financial_risk",
+                "level": "low",
+                "detail": "Transparency indicators present but no liquidity details"
+              },
+              {
+                "vector": "sustainability_risk",
+                "level": "low",
+                "detail": "Funding or revenue model is described"
+              }
+            ],
+            "red_flags_count": 2,
+            "threat_vectors_analyzed": 4
+          },
+          "risk_analyzer": "TrustAgent Risk Analyzer",
+          "methodology": "Multi-vector risk assessment with red flag detection and threat modeling",
+          "timestamp": "2026-03-23T06:19:36.016Z"
+        }
+      }
+    },
+    {
+      "id": 26,
+      "timestamp": "2026-03-23T06:19:36.016Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "aggregation_start",
+      "payload": {
+        "coordination_id": "coord_1774246775739_r1dfax",
+        "agents_reporting": [
+          "Evaluator",
+          "RiskAnalyzer"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "timestamp": "2026-03-23T06:19:36.016Z",
+      "from": "Coordinator",
+      "to": "*",
+      "type": "pipeline_end",
+      "payload": {
+        "coordination_id": "coord_1774246775739_r1dfax",
+        "status": "completed",
+        "duration_ms": 277
+      }
+    }
+  ],
+  "total_messages": 27,
+  "registry_contract": "0xcCEfce0Eb734Df5dFcBd68DB6Cf2bc80e8A87D98",
+  "chain": "Base Sepolia (84532)"
+}

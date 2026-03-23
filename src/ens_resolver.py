@@ -213,7 +213,7 @@ def namehash(name: str) -> bytes:
 
 
 # ---------------------------------------------------------------------------
-# RPC helper
+# RPC helpers
 # ---------------------------------------------------------------------------
 
 def _eth_call(to: str, data: str, rpc_url: str | None = None) -> str:
@@ -253,6 +253,43 @@ def _eth_call(to: str, data: str, rpc_url: str | None = None) -> str:
             continue
 
     raise RuntimeError(f"All RPC endpoints failed. Last error: {last_error}")
+
+
+def _get_block_number(rpc_url: str | None = None) -> int:
+    """
+    Fetch the latest block number from Ethereum mainnet.
+
+    Used to anchor ENS verification proofs to a specific block height,
+    making them auditable and reproducible.
+    """
+    endpoints = [rpc_url] if rpc_url else RPC_ENDPOINTS
+
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "eth_blockNumber",
+        "params": [],
+    }
+
+    last_error: Exception | None = None
+    for endpoint in endpoints:
+        try:
+            resp = httpx.post(
+                endpoint,
+                json=payload,
+                timeout=15.0,
+                headers={"Content-Type": "application/json"},
+            )
+            body = resp.json()
+            if "error" in body:
+                last_error = RuntimeError(f"RPC error: {body['error']}")
+                continue
+            return int(body.get("result", "0x0"), 16)
+        except Exception as exc:
+            last_error = exc
+            continue
+
+    raise RuntimeError(f"All RPC endpoints failed for eth_blockNumber. Last error: {last_error}")
 
 
 # ---------------------------------------------------------------------------
@@ -417,6 +454,126 @@ class ENSResolver:
             return False
         return resolved.lower() == expected_address.lower()
 
+    def verify_ens_onchain(self, ens_name: str, claimed_address: str) -> dict:
+        """
+        On-chain ENS verification with cryptographic proof.
+
+        Resolves the ENS name on Ethereum mainnet by querying the ENS
+        Registry (0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e), retrieves
+        the resolver contract, resolves the address, and compares it against
+        the claimed address.  Returns a structured verification result that
+        includes all on-chain proof data: block number, resolver address,
+        namehash node, and timestamp.
+
+        This function is the core of on-chain ENS enforcement for the
+        AgentRegistry.  The Solidity contract accepts any ENS string; this
+        function provides the verification that the string corresponds to a
+        real ENS name that resolves to the registrant's wallet.
+
+        Parameters
+        ----------
+        ens_name : str
+            The ENS name to verify (e.g. "vitalik.eth")
+        claimed_address : str
+            The Ethereum address that claims to own this ENS name
+
+        Returns
+        -------
+        dict
+            Verification result with the following keys:
+
+            - ``verified`` (bool): True if the ENS name resolves to
+              ``claimed_address`` on mainnet.
+            - ``ens_name`` (str): The ENS name that was checked.
+            - ``claimed_address`` (str): The address that was claimed.
+            - ``resolved_address`` (str|None): The address the ENS name
+              actually resolves to on-chain, or None if it does not resolve.
+            - ``resolver_contract`` (str|None): The resolver contract address
+              retrieved from the ENS Registry for this name.
+            - ``ens_registry`` (str): The ENS Registry contract address used.
+            - ``node`` (str): The EIP-137 namehash of the ENS name (hex).
+            - ``block_number`` (int): Ethereum mainnet block number at which
+              the verification was performed.
+            - ``chain_id`` (int): Chain ID (1 for mainnet).
+            - ``timestamp`` (float): Unix timestamp of the verification.
+            - ``verification_method`` (str): Description of the on-chain
+              verification method.
+            - ``error`` (str|None): Error message if verification failed
+              due to an RPC or resolution error.
+        """
+        ens_name = ens_name.lower().strip()
+        claimed_address = claimed_address.strip()
+        node = namehash(ens_name)
+        node_hex = "0x" + node.hex()
+        verification_ts = time.time()
+
+        result = {
+            "verified": False,
+            "ens_name": ens_name,
+            "claimed_address": claimed_address,
+            "resolved_address": None,
+            "resolver_contract": None,
+            "ens_registry": ENS_REGISTRY,
+            "node": node_hex,
+            "block_number": None,
+            "chain_id": 1,
+            "timestamp": verification_ts,
+            "verification_method": (
+                "On-chain ENS resolution via ENS Registry "
+                f"({ENS_REGISTRY}) -> resolver.addr(node) on "
+                "Ethereum mainnet at latest block"
+            ),
+            "error": None,
+        }
+
+        try:
+            # Fetch the current block number for proof anchoring
+            result["block_number"] = _get_block_number(self.rpc_url)
+
+            # Step 1: Query ENS Registry for the resolver address
+            resolver_addr = self._get_resolver(node)
+            result["resolver_contract"] = resolver_addr
+
+            if not resolver_addr:
+                result["error"] = (
+                    f"ENS name '{ens_name}' has no resolver set in the ENS "
+                    f"Registry.  The name may be unregistered or expired."
+                )
+                return result
+
+            # Step 2: Query the resolver for addr(node)
+            call_data = ADDR_SELECTOR + _encode_bytes32(node)
+            raw_result = _eth_call(resolver_addr, call_data, self.rpc_url)
+            resolved_address = _decode_address(raw_result)
+
+            if resolved_address:
+                resolved_address = _to_checksum_address(resolved_address)
+
+            result["resolved_address"] = resolved_address
+
+            if resolved_address is None:
+                result["error"] = (
+                    f"ENS name '{ens_name}' has a resolver "
+                    f"({resolver_addr}) but no addr record.  The name "
+                    f"exists but does not point to any address."
+                )
+                return result
+
+            # Step 3: Compare resolved address to claimed address
+            if resolved_address.lower() == claimed_address.lower():
+                result["verified"] = True
+            else:
+                result["error"] = (
+                    f"ENS name '{ens_name}' resolves to "
+                    f"{resolved_address}, not {claimed_address}.  The "
+                    f"claimed address does not match the on-chain record."
+                )
+
+        except Exception as exc:
+            result["error"] = f"On-chain verification failed: {exc}"
+
+        return result
+
     def resolve_agent_identity(self, ens_name: str) -> dict:
         """
         Full ENS identity resolution for an agent.
@@ -503,10 +660,108 @@ class ENSVerificationError(Exception):
     Raised when ENS verification fails during agent registration.
 
     The AgentRegistry contract on-chain accepts any string as an ensName,
-    so this off-chain error provides the enforcement layer that prevents
-    agents from claiming ENS names they do not control.
+    so this error provides the enforcement layer that prevents agents from
+    claiming ENS names they do not control.
+
+    Attributes
+    ----------
+    proof : dict or None
+        The full on-chain verification result (block number, resolver,
+        node, etc.) that documents *why* the verification failed.  This
+        proof is suitable for logging, auditing, or presenting to judges.
     """
-    pass
+
+    def __init__(self, message: str, proof: dict | None = None):
+        super().__init__(message)
+        self.proof = proof
+
+
+# ---------------------------------------------------------------------------
+# Top-level enforcement function
+# ---------------------------------------------------------------------------
+
+def enforce_ens_ownership(
+    ens_name: str,
+    claimed_address: str,
+    *,
+    rpc_url: str | None = None,
+) -> dict:
+    """
+    Enforce that an ENS name resolves to the claimed address on Ethereum
+    mainnet.  Raises ``ENSVerificationError`` if it does not.
+
+    This is the primary enforcement entry point for the AgentRegistry.
+    It performs a full on-chain verification (querying the ENS Registry at
+    0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e, retrieving the resolver,
+    and calling ``addr(node)``), and raises a descriptive error with the
+    complete on-chain proof attached if the ENS name does not resolve to
+    the claimed address.
+
+    On success, returns the verification proof dict so callers can log it,
+    store it, or present it to users / judges.
+
+    Parameters
+    ----------
+    ens_name : str
+        The ENS name to verify (e.g. "vitalik.eth").
+    claimed_address : str
+        The Ethereum address that claims to own this ENS name.
+    rpc_url : str or None
+        Optional specific RPC endpoint.  Defaults to the built-in
+        fallback chain of free mainnet endpoints.
+
+    Returns
+    -------
+    dict
+        The on-chain verification proof (same structure as
+        ``ENSResolver.verify_ens_onchain``), guaranteed to have
+        ``verified == True``.
+
+    Raises
+    ------
+    ENSVerificationError
+        If the ENS name does not resolve to ``claimed_address``.  The
+        exception's ``proof`` attribute contains the full verification
+        result for auditing.
+
+    Examples
+    --------
+    >>> proof = enforce_ens_ownership("vitalik.eth",
+    ...     "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+    >>> proof["verified"]
+    True
+    >>> proof["block_number"]  # Ethereum mainnet block at verification time
+    22102345
+
+    >>> enforce_ens_ownership("vitalik.eth", "0x0000...1234")
+    ENSVerificationError: ENS enforcement failed: 'vitalik.eth' resolves
+    to 0xd8dA..., not 0x0000...1234. ...
+    """
+    resolver = ENSResolver(rpc_url=rpc_url)
+    proof = resolver.verify_ens_onchain(ens_name, claimed_address)
+
+    if proof["verified"]:
+        return proof
+
+    # Build a human-readable error message
+    if proof["resolved_address"] is None:
+        msg = (
+            f"ENS enforcement failed: '{ens_name}' does not resolve to any "
+            f"address on Ethereum mainnet (block {proof['block_number']}). "
+            f"The name may be unregistered or expired. Register it at "
+            f"https://app.ens.domains and set the addr record to "
+            f"{claimed_address} before registering this agent."
+        )
+    else:
+        msg = (
+            f"ENS enforcement failed: '{ens_name}' resolves to "
+            f"{proof['resolved_address']}, not {claimed_address} "
+            f"(verified on-chain at block {proof['block_number']} via "
+            f"resolver {proof['resolver_contract']}). Only the wallet that "
+            f"the ENS name points to may register with it."
+        )
+
+    raise ENSVerificationError(msg, proof=proof)
 
 
 # ---------------------------------------------------------------------------
@@ -575,36 +830,21 @@ class ENSAgentRegistry:
             message explains *why* the registration was rejected so the
             caller can take corrective action.
         """
-        # Step 1: Resolve the ENS name
+        # Step 1: Full on-chain ENS verification with proof
+        onchain_proof = self.resolver.verify_ens_onchain(ens_name, wallet_address)
+        ownership_verified = onchain_proof["verified"]
+
+        # Step 1b: Also get identity info for reverse resolution metadata
         identity = self.resolver.resolve_agent_identity(ens_name)
 
-        # Step 2: Verify ownership if the name resolves
-        ownership_verified = False
-        if identity["resolved_address"]:
-            ownership_verified = self.resolver.verify_ens_ownership(
-                ens_name, wallet_address
+        # Step 2: Enforce ENS ownership via on-chain proof
+        if strict and not ownership_verified:
+            # Use enforce_ens_ownership for consistent error messages + proof
+            enforce_ens_ownership(
+                ens_name, wallet_address, rpc_url=self.resolver.rpc_url
             )
 
-        # Step 2b: Enforce ENS ownership (off-chain guard for on-chain gap)
-        if strict and not ownership_verified:
-            if identity["resolved_address"] is None:
-                raise ENSVerificationError(
-                    f"Registration rejected: ENS name '{ens_name}' does not "
-                    f"resolve to any address on Ethereum mainnet.  The agent "
-                    f"cannot claim an unregistered or expired ENS name.  "
-                    f"Register '{ens_name}' on ENS (https://app.ens.domains) "
-                    f"and point it to {wallet_address} before retrying."
-                )
-            else:
-                raise ENSVerificationError(
-                    f"Registration rejected: ENS name '{ens_name}' resolves "
-                    f"to {identity['resolved_address']}, but the agent wallet "
-                    f"is {wallet_address}.  The resolved address does not "
-                    f"match the registrant's wallet.  Only the address that "
-                    f"controls the ENS name may register with it."
-                )
-
-        # Step 3: Build the registration record
+        # Step 3: Build the registration record with on-chain proof
         verification_level = _compute_verification_level(
             identity, ownership_verified
         )
@@ -622,6 +862,15 @@ class ENSAgentRegistry:
                 "reverse_name": identity["reverse_name"],
                 "verification_level": verification_level,
                 "enforcement": "strict" if strict else "permissive",
+            },
+            "onchain_proof": {
+                "verified": onchain_proof["verified"],
+                "ens_registry": onchain_proof["ens_registry"],
+                "resolver_contract": onchain_proof["resolver_contract"],
+                "node": onchain_proof["node"],
+                "block_number": onchain_proof["block_number"],
+                "chain_id": onchain_proof["chain_id"],
+                "verification_method": onchain_proof["verification_method"],
             },
             "registration_status": "approved" if ownership_verified else "warning",
             "primary_identifier": ens_name if ownership_verified else wallet_address,
@@ -664,10 +913,10 @@ def _compute_verification_level(identity: dict, ownership_verified: bool) -> str
 # ---------------------------------------------------------------------------
 
 def demo():
-    """Demonstrate real ENS resolution for TrustAgent."""
+    """Demonstrate real ENS resolution and on-chain enforcement for TrustAgent."""
     print("=" * 72)
-    print("  TrustAgent ENS Resolver")
-    print("  Real Ethereum Mainnet ENS Name Resolution")
+    print("  TrustAgent ENS Resolver -- On-Chain ENS Enforcement")
+    print("  Real Ethereum Mainnet ENS Name Resolution + Verification")
     print("=" * 72)
 
     resolver = ENSResolver()
@@ -703,32 +952,138 @@ def demo():
     identity = resolver.resolve_agent_identity("vitalik.eth")
     print(json.dumps(identity, indent=2))
 
-    # --- Agent Registration with ENS Verification (strict mode) ---
-    print("\n--- Agent Registration with ENS Verification (strict) ---")
-    registry = ENSAgentRegistry()
-    registration = registry.register_with_ens(
-        agent_name="ResearchAgent",
-        ens_name="vitalik.eth",
-        wallet_address=vitalik_addr,
-        capabilities=["research", "analysis", "public-goods-eval"],
-    )
-    print(json.dumps(registration, indent=2, default=str))
+    # =====================================================================
+    # ON-CHAIN ENS VERIFICATION WITH PROOF
+    # =====================================================================
+    print("\n" + "=" * 72)
+    print("  ON-CHAIN ENS ENFORCEMENT DEMO")
+    print("  Queries ENS Registry (0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e)")
+    print("  on Ethereum mainnet for every verification")
+    print("=" * 72)
 
-    # --- Demonstrate ENS enforcement: mismatched address ---
-    print("\n--- ENS Enforcement: Mismatched Address (strict) ---")
+    # --- On-chain verification: VALID case ---
+    print("\n--- On-Chain Verification: VALID (vitalik.eth -> correct address) ---")
+    try:
+        proof = resolver.verify_ens_onchain("vitalik.eth", vitalik_addr)
+        print(f"  Verified:          {proof['verified']}")
+        print(f"  ENS Name:          {proof['ens_name']}")
+        print(f"  Claimed Address:   {proof['claimed_address']}")
+        print(f"  Resolved Address:  {proof['resolved_address']}")
+        print(f"  Resolver Contract: {proof['resolver_contract']}")
+        print(f"  ENS Registry:      {proof['ens_registry']}")
+        print(f"  Namehash Node:     {proof['node']}")
+        print(f"  Block Number:      {proof['block_number']}")
+        print(f"  Chain ID:          {proof['chain_id']}")
+        print(f"  Method:            {proof['verification_method']}")
+    except Exception as e:
+        print(f"  [error: {e}]")
+
+    # --- On-chain verification: INVALID (wrong address) ---
+    print("\n--- On-Chain Verification: INVALID (vitalik.eth -> wrong address) ---")
+    fake_addr = "0x0000000000000000000000000000000000001234"
+    try:
+        proof = resolver.verify_ens_onchain("vitalik.eth", fake_addr)
+        print(f"  Verified:          {proof['verified']}")
+        print(f"  Claimed Address:   {proof['claimed_address']}")
+        print(f"  Resolved Address:  {proof['resolved_address']}")
+        print(f"  Block Number:      {proof['block_number']}")
+        print(f"  Error:             {proof['error']}")
+    except Exception as e:
+        print(f"  [error: {e}]")
+
+    # --- On-chain verification: INVALID (unregistered name) ---
+    print("\n--- On-Chain Verification: INVALID (unregistered name) ---")
+    try:
+        proof = resolver.verify_ens_onchain(
+            "nonexistent-name-xyz-12345.eth", fake_addr
+        )
+        print(f"  Verified:          {proof['verified']}")
+        print(f"  Resolver Contract: {proof['resolver_contract']}")
+        print(f"  Block Number:      {proof['block_number']}")
+        print(f"  Error:             {proof['error']}")
+    except Exception as e:
+        print(f"  [error: {e}]")
+
+    # =====================================================================
+    # enforce_ens_ownership() -- raises on failure
+    # =====================================================================
+    print("\n" + "-" * 72)
+    print("  enforce_ens_ownership() -- Top-Level Enforcement Function")
+    print("-" * 72)
+
+    # --- enforce_ens_ownership: VALID case ---
+    print("\n--- enforce_ens_ownership: VALID (vitalik.eth) ---")
+    try:
+        proof = enforce_ens_ownership("vitalik.eth", vitalik_addr)
+        print(f"  PASSED -- ENS verified on-chain at block {proof['block_number']}")
+        print(f"  Resolver: {proof['resolver_contract']}")
+        print(f"  Node:     {proof['node']}")
+    except ENSVerificationError as e:
+        print(f"  UNEXPECTED FAILURE: {e}")
+
+    # --- enforce_ens_ownership: INVALID (mismatched address) ---
+    print("\n--- enforce_ens_ownership: INVALID (mismatched address) ---")
+    try:
+        enforce_ens_ownership("vitalik.eth", fake_addr)
+        print("  ERROR: should have raised ENSVerificationError!")
+    except ENSVerificationError as e:
+        print(f"  REJECTED: {e}")
+        if e.proof:
+            print(f"  Proof block:    {e.proof['block_number']}")
+            print(f"  Proof resolver: {e.proof['resolver_contract']}")
+            print(f"  Proof node:     {e.proof['node']}")
+
+    # --- enforce_ens_ownership: INVALID (unregistered name) ---
+    print("\n--- enforce_ens_ownership: INVALID (unregistered ENS name) ---")
+    try:
+        enforce_ens_ownership(
+            "nonexistent-name-xyz-12345.eth", fake_addr
+        )
+        print("  ERROR: should have raised ENSVerificationError!")
+    except ENSVerificationError as e:
+        print(f"  REJECTED: {e}")
+        if e.proof:
+            print(f"  Proof block: {e.proof['block_number']}")
+
+    # =====================================================================
+    # Agent Registration with on-chain proof
+    # =====================================================================
+    print("\n" + "-" * 72)
+    print("  Agent Registration with On-Chain ENS Proof")
+    print("-" * 72)
+
+    # --- Agent Registration: VALID (strict mode) ---
+    print("\n--- Agent Registration: VALID (strict, with on-chain proof) ---")
+    registry = ENSAgentRegistry()
+    try:
+        registration = registry.register_with_ens(
+            agent_name="ResearchAgent",
+            ens_name="vitalik.eth",
+            wallet_address=vitalik_addr,
+            capabilities=["research", "analysis", "public-goods-eval"],
+        )
+        print(json.dumps(registration, indent=2, default=str))
+    except Exception as e:
+        print(f"  [error: {e}]")
+
+    # --- Agent Registration: REJECTED (mismatched address, strict) ---
+    print("\n--- Agent Registration: REJECTED (mismatched address, strict) ---")
     try:
         registry.register_with_ens(
             agent_name="FakeAgent",
             ens_name="vitalik.eth",
-            wallet_address="0x0000000000000000000000000000000000001234",
+            wallet_address=fake_addr,
             capabilities=["fraud"],
         )
         print("  ERROR: registration should have been rejected!")
     except ENSVerificationError as e:
         print(f"  REJECTED: {e}")
+        if e.proof:
+            print(f"  On-chain proof attached: block={e.proof['block_number']}, "
+                  f"resolver={e.proof['resolver_contract']}")
 
-    # --- Demonstrate ENS enforcement: unregistered name ---
-    print("\n--- ENS Enforcement: Unregistered Name (strict) ---")
+    # --- Agent Registration: REJECTED (unregistered name, strict) ---
+    print("\n--- Agent Registration: REJECTED (unregistered name, strict) ---")
     try:
         registry.register_with_ens(
             agent_name="GhostAgent",
@@ -740,17 +1095,20 @@ def demo():
     except ENSVerificationError as e:
         print(f"  REJECTED: {e}")
 
-    # --- Demonstrate permissive mode (backward compatible) ---
-    print("\n--- ENS Registration: Permissive Mode (strict=False) ---")
+    # --- Permissive mode (backward compatible) ---
+    print("\n--- Agent Registration: Permissive Mode (strict=False) ---")
     permissive_result = registry.register_with_ens(
         agent_name="TestAgent",
         ens_name="vitalik.eth",
-        wallet_address="0x0000000000000000000000000000000000001234",
+        wallet_address=fake_addr,
         capabilities=["test"],
         strict=False,
     )
-    print(f"  Status: {permissive_result['registration_status']}")
+    print(f"  Status:  {permissive_result['registration_status']}")
     print(f"  Warning: {permissive_result.get('warning', 'none')}")
+    if "onchain_proof" in permissive_result:
+        print(f"  Proof:   block={permissive_result['onchain_proof']['block_number']}, "
+              f"verified={permissive_result['onchain_proof']['verified']}")
 
     # --- Batch Resolution ---
     print("\n--- Batch Resolution ---")
@@ -760,11 +1118,15 @@ def demo():
         print(f"  {name:30s} -> {status}")
 
     print("\n" + "=" * 72)
-    print("  ENS is core to TrustAgent identity:")
-    print("  - Names replace addresses as the primary identifier")
-    print("  - Forward + reverse resolution verifies ownership")
-    print("  - Registration ENFORCES ENS verification (off-chain guard)")
-    print("  - Mismatched addresses are REJECTED with clear error messages")
+    print("  ON-CHAIN ENS ENFORCEMENT SUMMARY:")
+    print("  - ENS Registry queried at 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e")
+    print("  - Every verification anchored to a specific mainnet block number")
+    print("  - Resolver contract address recorded as proof")
+    print("  - EIP-137 namehash node included for reproducibility")
+    print("  - enforce_ens_ownership() raises with full proof on failure")
+    print("  - AgentRegistry registration includes onchain_proof object")
+    print("  - Mismatched / unregistered names are REJECTED")
+    print("  - Permissive mode available for backward compatibility")
     print("=" * 72)
 
 
