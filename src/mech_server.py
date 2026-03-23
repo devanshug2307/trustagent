@@ -22,6 +22,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import sys
 import time
 import uuid
@@ -42,8 +43,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-WALLET_ADDRESS = "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7"
-PRIVATE_KEY = "b5d82d77b0ba619e3bec08dfeb5bde6b55fe5b93e2b4b25dfb07c3e925b13d69"
+WALLET_ADDRESS = os.getenv("WALLET_ADDRESS", "0x54eeFbb7b3F701eEFb7fa99473A60A6bf5fE16D7")
+PRIVATE_KEY = os.getenv("PRIVATE_KEY", "")
 MECH_AGENT_ID = 1
 TOOL_NAME = "reputation_evaluation"
 FEE_WEI = 100000  # 0.0001 ETH per request
