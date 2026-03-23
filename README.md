@@ -508,9 +508,13 @@ Most "agent platforms" either give agents a shared database or rely on centraliz
 
 ## Tests
 
-**23/23 passing** — run with:
+**83 tests passing (23 Solidity + 60 Python)** — run with:
 ```bash
+# Solidity tests (23/23)
 npx hardhat --config hardhat.config.cjs test
+
+# Python tests (60)
+python3 -m pytest tests/ -v
 ```
 
 ## How to Run
@@ -523,8 +527,11 @@ cd trustagent
 # Install
 npm install
 
-# Run tests (23/23 passing)
+# Run Solidity tests (23/23 passing)
 npx hardhat --config hardhat.config.cjs test
+
+# Run Python tests (60)
+python3 -m pytest tests/ -v
 
 # Run multi-agent onchain demo (needs Base Sepolia ETH)
 npx hardhat --config hardhat.config.cjs run scripts/multi-agent-demo.cjs --network baseSepolia
@@ -555,7 +562,7 @@ trustagent/
 │   ├── mech_client_test.py         # Olas: HTTP client for testing mech server
 │   └── ens_resolver.py             # ENS: real mainnet name resolution + agent identity verification
 ├── test/
-│   └── AgentRegistry.test.cjs   # 23 tests
+│   └── AgentRegistry.test.cjs   # 23 Solidity tests
 ├── docs/
 │   └── index.html               # Live dashboard
 ├── agent.json                   # Agent identity + capabilities descriptor
